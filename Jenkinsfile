@@ -22,7 +22,6 @@ pipeline {
         stage('Running Tests') {
             steps {
                 sh 'npm run test:cov'
-                archiveArtifacts artifacts: 'coverage/**', fingerprint: true
             }
         }
     }
