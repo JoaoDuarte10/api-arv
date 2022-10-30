@@ -18,7 +18,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "docker:build": "docker build --rm -f \"Dockerfile\" -t 741258321/arv-controll:latest \".\"",
+    "docker:run": "docker run -d --name api-arv-controll --restart unless-stopped --env-file .env -p 5000:5000 741258321/arv-controll:latest"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  api-arv:
+    container_name: api-arv
+    build: .
+    restart: always
+    ports:
+      - 5000:5000
+    volumes:
+      - .:usr/app/arv
+    env_file:
+      - .env
