@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { loadEnvs } from './config/load-envs';
 import { configProviders } from './providers/config-provider';
 
@@ -12,7 +10,7 @@ import { configProviders } from './providers/config-provider';
       load: [loadEnvs],
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService, ...configProviders],
+  controllers: [],
+  providers: [...configProviders],
 })
 export class AppModule {}
