@@ -17,5 +17,12 @@ export function configMap(envs: Env): Config {
       container: envs.REDIS_CONTAINER || name,
       name: envs.REDIS_NAME || name,
     },
+    [ConfigTypes.dbConfig]: {
+      user: envs.PGUSER,
+      host: envs.PGHOST,
+      database: envs.PGDATABASE,
+      password: envs.PGPASSWORD,
+      port: Number(envs.PGPORT),
+    },
   };
 }

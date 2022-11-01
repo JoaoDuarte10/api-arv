@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { database } from './db';
+import { Inject, Injectable } from '@nestjs/common';
 import { ClientDto } from '../client-dto';
 
 @Injectable()
 export class ClientRepository {
+  constructor(@Inject('DATABASE_CONNECTION') private readonly database) {}
+
   async findBy(
     idusers: number,
     field: string,
@@ -24,7 +25,7 @@ export class ClientRepository {
       values: [idusers, value],
     };
 
-    const { rows } = await database.query(sql.text, sql.values);
+    const { rows } = await this.database.query(sql.text, sql.values);
 
     return rows;
   }
@@ -45,7 +46,7 @@ export class ClientRepository {
       values: [idusers],
     };
 
-    const { rows } = await database.query(sql.text, sql.values);
+    const { rows } = await this.database.query(sql.text, sql.values);
 
     return rows;
   }
@@ -70,7 +71,7 @@ export class ClientRepository {
       values: [idusers, name, email, phone, idsegments],
     };
 
-    await database.query(sql.text, sql.values);
+    await this.database.query(sql.text, sql.values);
   }
 
   async update({
@@ -86,11 +87,11 @@ export class ClientRepository {
       values: [name, email, phone, idsegments, idclients, idusers],
     };
 
-    await database.query(sql.text, sql.values);
+    await this.database.query(sql.text, sql.values);
   }
 
   async delete(idusers: number, idclients: number): Promise<void> {
-    await database.query(
+    await this.database.query(
       'DELETE FROM clients WHERE idusers = $1 AND idclients = $2',
       [idusers, idclients],
     );
