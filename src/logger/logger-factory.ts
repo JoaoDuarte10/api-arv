@@ -24,12 +24,7 @@ export function loggerFactory(appConfig: AppConfig): Logger {
     levels: levels,
     transports: [
       new transports.File({
-        filename: 'logs/errors.log',
-        level: 'error',
-      }),
-      new transports.File({
-        filename: 'logs/info.log',
-        level: 'info',
+        filename: 'logs/app.log',
       }),
     ],
   });
