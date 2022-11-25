@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS api_arv.users (
     idusers serial PRIMARY KEY NOT NULL,
     name VARCHAR(256) NOT NULL,
     password VARCHAR(256) NOT NULL,

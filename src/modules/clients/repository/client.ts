@@ -19,8 +19,8 @@ export class ClientRepository {
                 c.phone,
                 c.created_at,
                 c.updated_at
-              FROM clients c 
-                LEFT JOIN segments s ON c.idsegments = s.idsegments
+              FROM api_arv.clients c 
+                LEFT JOIN api_arv.segments s ON c.idsegments = s.idsegments
               WHERE c.idusers = $1 AND c.${field} = $2`,
       values: [idusers, value],
     };
@@ -40,8 +40,8 @@ export class ClientRepository {
                 c.phone,
                 c.created_at,
                 c.updated_at
-              FROM clients c 
-                LEFT JOIN segments s ON c.idsegments = s.idsegments
+              FROM api_arv.clients c 
+                LEFT JOIN api_arv.segments s ON c.idsegments = s.idsegments
               WHERE c.idusers = $1`,
       values: [idusers],
     };
@@ -59,7 +59,7 @@ export class ClientRepository {
     idsegments,
   }: any): Promise<void> {
     const sql = {
-      text: `INSERT INTO clients(
+      text: `INSERT INTO api_arv.clients(
             idusers,
             name,
             email,
@@ -83,7 +83,7 @@ export class ClientRepository {
     idsegments,
   }: any): Promise<void> {
     const sql = {
-      text: 'UPDATE clients SET name = $1, email = $2, phone = $3, idsegments = $4 WHERE idclients = $5 AND idusers = $6',
+      text: 'UPDATE api_arv.clients SET name = $1, email = $2, phone = $3, idsegments = $4 WHERE idclients = $5 AND idusers = $6',
       values: [name, email, phone, idsegments, idclients, idusers],
     };
 
@@ -92,7 +92,7 @@ export class ClientRepository {
 
   async delete(idusers: number, idclients: number): Promise<void> {
     await this.database.query(
-      'DELETE FROM clients WHERE idusers = $1 AND idclients = $2',
+      'DELETE FROM api_arv.clients WHERE idusers = $1 AND idclients = $2',
       [idusers, idclients],
     );
   }

@@ -1,4 +1,4 @@
-create table if not exists sales(
+create table if not exists api_arv.sales(
     idsales serial primary key not null,
     idusers int not null,
     idclients int null,
@@ -7,6 +7,6 @@ create table if not exists sales(
     price int not null,
     created_at TIMESTAMP DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMP NULL,
-    FOREIGN KEY(idusers) REFERENCES users(idusers),
-    FOREIGN KEY(idclients) REFERENCES clients(idclients)
+    FOREIGN KEY(idusers) REFERENCES api_arv.users(idusers),
+    FOREIGN KEY(idclients) REFERENCES api_arv.clients(idclients)
 );

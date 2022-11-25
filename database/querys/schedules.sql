@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS schedules (
+CREATE TABLE IF NOT EXISTS api_arv.schedules (
     idschedules serial PRIMARY KEY NOT NULL,
     idusers int NOT NULL,
     idclients int NOT NULL,
@@ -11,6 +11,6 @@ CREATE TABLE IF NOT EXISTS schedules (
     qtdTotalAtendence int NULL,
     created_at TIMESTAMP DEFAULT NOW() NOT NULL,
     updated_at TIMESTAMP NULL,
-    FOREIGN KEY(idusers) REFERENCES users(idusers),
-    FOREIGN KEY(idclients) REFERENCES clients(idclients)
+    FOREIGN KEY(idusers) REFERENCES api_arv.users(idusers),
+    FOREIGN KEY(idclients) REFERENCES api_arv.clients(idclients)
 );
