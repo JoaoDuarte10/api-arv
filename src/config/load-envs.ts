@@ -7,7 +7,7 @@ const RELOAD_SCALE = 1e3;
 export function loadEnvs(): Config {
   try {
     const variables = loadFromEnv();
-    const config = configMap(variables) as Config;
+    const config: Config = configMap(variables);
     const reloadTime = Number(variables.SETTINGS_RELOAD_TIME);
     if (reloadTime) {
       setTimeout(loadEnvs, reloadTime * RELOAD_SCALE);
