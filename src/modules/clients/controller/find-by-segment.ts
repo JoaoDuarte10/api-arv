@@ -9,7 +9,7 @@ export class FindClientBySegmentController {
 
   @Get('segment')
   async handle(@Req() req: Request): Promise<ClientDto[]> {
-    const idusers = parseInt(req.headers['id-user'].toString(), 10);
+    const idusers = Number(req.headers['id-user']);
     const idsegments = parseInt(req.query.segment.toString(), 10);
     return await this.service.findBySegment(idusers, idsegments);
   }

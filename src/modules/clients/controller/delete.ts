@@ -8,7 +8,7 @@ export class DeleteClientController {
 
   @Delete()
   async handle(@Req() req: Request): Promise<void> {
-    const idusers = parseInt(req.headers['id-user'].toString(), 10);
+    const idusers = Number(req.headers['id-user']);
     const idclients = parseInt(req.query.id.toString(), 10);
     await this.service.execute(idusers, idclients);
   }

@@ -9,7 +9,7 @@ export class FindAllClientsController {
 
   @Get('all')
   async handle(@Req() req: Request): Promise<ClientDto[]> {
-    const idusers = parseInt(req.headers['id-user'].toString(), 10);
+    const idusers = Number(req.headers['id-user']);
     return await this.service.findAll(idusers);
   }
 }

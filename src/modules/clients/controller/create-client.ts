@@ -12,7 +12,7 @@ export class CreateClientController {
     @Req() req: Request,
     @Body() clientDto: ClientDto,
   ): Promise<void> {
-    const idusers = parseInt(req.headers['id-user'].toString(), 10);
+    const idusers = Number(req.headers['id-user']);
     clientDto.idusers = idusers;
     await this.service.execute(clientDto);
   }
