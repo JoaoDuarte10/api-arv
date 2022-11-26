@@ -11,6 +11,6 @@ import { configProviders } from 'src/providers/config-provider';
 })
 export class ClientModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('*');
+    consumer.apply(AuthMiddleware).forRoutes(...clientController);
   }
 }
