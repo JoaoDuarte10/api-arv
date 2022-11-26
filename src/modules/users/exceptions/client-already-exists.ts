@@ -1,7 +1,15 @@
-export class ClientAlreadyExistsException extends Error {
+import { BaseHttpException } from '../../../exceptions/base';
+import { HttpStatus } from '@nestjs/common';
+
+export class ClientAlreadyExistsException extends BaseHttpException {
   constructor(message: string) {
-    super();
-    this.name = 'ClientAlreadyExistsException';
-    this.message = message;
+    const statusCode = HttpStatus.CONFLICT;
+
+    super(statusCode, [
+      {
+        type: 'ClientAlreadyExistsException',
+        message,
+      },
+    ]);
   }
 }

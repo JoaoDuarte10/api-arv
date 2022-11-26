@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Req,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Body, Controller, Post, Req, HttpException } from '@nestjs/common';
 import { Request } from 'express';
 import { ClientDto } from '../client-dto';
 import { CreateClientService } from '../services/create';
@@ -26,7 +19,13 @@ export class CreateClientController {
       await this.service.execute(clientDto);
     } catch (error) {
       if (error instanceof ClientAlreadyExistsException) {
-        throw new HttpException(error.message, HttpStatus.CONFLICT);
+        throw new HttpException(
+          {
+            statusCode: error.getStatusCode(),
+            details: error.getDetails(),
+          },
+          error.getStatusCode(),
+        );
       }
     }
   }
