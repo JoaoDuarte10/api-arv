@@ -6,7 +6,6 @@ import { ClientRepository } from './repository/client';
 import { configProviders } from 'src/providers/config-provider';
 
 @Module({
-  imports: [],
   controllers: [...clientController],
   providers: [...clientService, ClientRepository, ...configProviders],
 })

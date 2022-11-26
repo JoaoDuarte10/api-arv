@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { loadEnvs } from './config/load-envs';
 import { configProviders } from './providers/config-provider';
-import { ClientModule } from './modules/clients/client.module';
-import { UserModule } from './modules/users/users.module';
+import { Modules } from './modules/index';
 
 @Module({
   imports: [
@@ -11,10 +10,8 @@ import { UserModule } from './modules/users/users.module';
       isGlobal: true,
       load: [loadEnvs],
     }),
-    // ClientModule,
-    UserModule,
+    ...Modules,
   ],
-  controllers: [],
   providers: [...configProviders],
 })
 export class AppModule {}
