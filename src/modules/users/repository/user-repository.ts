@@ -38,4 +38,14 @@ export class UserRepository {
     const { rows } = await this.database.query(sql);
     return rows;
   }
+
+  async findOne(username: string) {
+    const sql = {
+      query: 'SELECT * FROM api_arv.users WHERE name = $1',
+      values: [username],
+    };
+
+    const { rows } = await this.database.query(sql.query, sql.values);
+    return rows[0];
+  }
 }

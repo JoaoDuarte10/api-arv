@@ -24,5 +24,9 @@ export function configMap(envs: Env): Config {
       password: envs.PGPASSWORD,
       port: Number(envs.PGPORT),
     },
+    [ConfigTypes.jwtConfig]: {
+      secret: envs.JWT_SECRETS,
+      expiresIn: Number(envs.JWT_EXPIRES_IN),
+    },
   };
 }

@@ -1,5 +1,10 @@
 import { Provider } from '@nestjs/common';
-import { AppConfig, ConfigTypes, DatabaseConfig } from '../config/config';
+import {
+  AppConfig,
+  ConfigTypes,
+  DatabaseConfig,
+  JwtConfig,
+} from '../config/config';
 import { configGetter } from './config-getter';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '../logger/logger';
@@ -26,5 +31,10 @@ export const configProviders: Provider[] = [
     provide: 'DATABASE_CONNECTION',
     useFactory: (databaseConfig: DatabaseConfig) => database(databaseConfig),
     inject: [DatabaseConfig],
+  },
+  {
+    provide: JwtConfig,
+    useFactory: configGetter(ConfigTypes.jwtConfig),
+    inject: [ConfigService],
   },
 ];

@@ -2,6 +2,7 @@ export enum ConfigTypes {
   app = 'app',
   logger = 'loggerTransport',
   dbConfig = 'dbConfig',
+  jwtConfig = 'jwtConfig',
 }
 
 export abstract class AppConfig {
@@ -25,8 +26,14 @@ export abstract class DatabaseConfig {
   port: number;
 }
 
+export abstract class JwtConfig {
+  secret: string;
+  expiresIn: number;
+}
+
 export interface Config {
   [ConfigTypes.app]: AppConfig;
   [ConfigTypes.logger]: LoggerTransport;
   [ConfigTypes.dbConfig]: DatabaseConfig;
+  [ConfigTypes.jwtConfig]: JwtConfig;
 }
