@@ -7,5 +7,6 @@ import { configProviders } from 'src/providers/config-provider';
 @Module({
   controllers: [...clientController],
   providers: [...clientService, ClientRepository, ...configProviders],
+  exports: [ClientRepository],
 })
 export class ClientModule {}

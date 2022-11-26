@@ -47,7 +47,7 @@ export class RulesRepository {
     const sql = {
       text: `INSERT INTO api_arv.clients_rules (
                 idrules,
-                idusers,
+                idusers
             ) VALUES (
                 $1, $2
             );`,
