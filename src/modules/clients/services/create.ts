@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ClientDto } from '../client-dto';
 import { ClientRepository } from '../repository/client';
+import { ClientAlreadyExistsException } from '../exceptions/client-already-exists';
 
 @Injectable()
 export class CreateClientService {
@@ -12,7 +13,8 @@ export class CreateClientService {
       'name',
       client.name,
     );
-    if (clientAlreadExists) throw new Error();
+    if (clientAlreadExists)
+      throw new ClientAlreadyExistsException('Client alread exists');
     await this.repository.create({
       idusers: client.idusers,
       name: client.name,
