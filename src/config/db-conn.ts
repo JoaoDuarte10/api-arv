@@ -1,5 +1,5 @@
-import { Pool } from 'pg';
-import { DatabaseConfig } from '../../../config/config';
+import { Pool, QueryResult } from 'pg';
+import { DatabaseConfig } from './config';
 
 export function database(dbConfig: DatabaseConfig) {
   const pool = new Pool({
@@ -14,4 +14,8 @@ export function database(dbConfig: DatabaseConfig) {
       return pool.query(text, params);
     },
   };
+}
+
+export interface Database {
+  query(text: string, params?: any[]): Promise<QueryResult<any>>;
 }
