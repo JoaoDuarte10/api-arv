@@ -1,21 +1,29 @@
-import { Body, Controller, Post, Req, HttpException } from '@nestjs/common';
-import { Request } from 'express';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  HttpException,
+  UseGuards,
+} from '@nestjs/common';
 import { ClientDto } from '../client-dto';
 import { CreateClientService } from '../services/create';
 import { ClientAlreadyExistsException } from '../exceptions/client-already-exists';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RequestType } from '../../../types/request';
 
 @Controller('client')
 export class CreateClientController {
   constructor(private readonly service: CreateClientService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async handle(
-    @Req() req: Request,
+    @Req() req: RequestType,
     @Body() clientDto: ClientDto,
   ): Promise<void> {
     try {
-      const idusers = Number(req.headers['id-user']);
-      clientDto.idusers = idusers;
+      clientDto.idusers = req.user.idusers;
       await this.service.execute(clientDto);
     } catch (error) {
       if (error instanceof ClientAlreadyExistsException) {

@@ -1,19 +1,20 @@
-import { Body, Controller, Put, Req } from '@nestjs/common';
-import { Request } from 'express';
+import { Body, Controller, Put, Req, UseGuards } from '@nestjs/common';
 import { ClientDto } from '../client-dto';
 import { UpdateClientService } from '../services/update';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RequestType } from '../../../types/request';
 
 @Controller('client')
 export class UpdateClientController {
   constructor(private readonly service: UpdateClientService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Put()
   async handle(
-    @Req() req: Request,
+    @Req() req: RequestType,
     @Body() clientDto: ClientDto,
   ): Promise<void> {
-    const idusers = Number(req.headers['id-user']);
-    clientDto.idusers = idusers;
+    clientDto.idusers = req.user.idusers;
     await this.service.execute(clientDto);
   }
 }
