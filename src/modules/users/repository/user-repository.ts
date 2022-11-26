@@ -1,9 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UserDto } from '../user-dto';
+import { Database } from '../../../config/db-conn';
 
 @Injectable()
 export class UserRepository {
-  constructor(@Inject('DATABASE_CONNECTION') private readonly database) {}
+  constructor(
+    @Inject('DATABASE_CONNECTION') private readonly database: Database,
+  ) {}
 
   async create(user: UserDto) {
     const sql = {

@@ -1,9 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientDto } from '../client-dto';
+import { Database } from '../../../config/db-conn';
 
 @Injectable()
 export class ClientRepository {
-  constructor(@Inject('DATABASE_CONNECTION') private readonly database) {}
+  constructor(
+    @Inject('DATABASE_CONNECTION') private readonly database: Database,
+  ) {}
 
   async findBy(
     idusers: number,

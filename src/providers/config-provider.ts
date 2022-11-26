@@ -4,7 +4,7 @@ import { configGetter } from './config-getter';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '../logger/logger';
 import { loggerFactory } from '../logger/logger-factory';
-import { database } from '../modules/clients/repository/db';
+import { database } from '../modules/../config/db-conn';
 
 export const configProviders: Provider[] = [
   {
