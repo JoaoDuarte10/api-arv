@@ -7,7 +7,7 @@ import { ClientAlreadyExistsException } from '../exceptions/client-already-exist
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(user: UserDto) {
+  async create(user: UserDto) {
     const userAlreadyExists = await this.userRepository.findBy(
       'name',
       user.name,
@@ -16,5 +16,9 @@ export class UserService {
       throw new ClientAlreadyExistsException('Client already exists');
     }
     await this.userRepository.create(user);
+  }
+
+  async findAll() {
+    return await this.userRepository.findAll();
   }
 }

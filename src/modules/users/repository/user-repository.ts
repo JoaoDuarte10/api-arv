@@ -28,4 +28,11 @@ export class UserRepository {
     const { rows } = await this.database.query(sql.query, sql.values);
     return rows[0];
   }
+
+  async findAll() {
+    const sql = 'SELECT * FROM api_arv.users';
+
+    const { rows } = await this.database.query(sql);
+    return rows;
+  }
 }

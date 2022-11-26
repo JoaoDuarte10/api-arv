@@ -4,6 +4,7 @@ import {
   Post,
   HttpException,
   HttpStatus,
+  Get,
 } from '@nestjs/common';
 import { UserDto } from '../user-dto';
 import { UserService } from '../services/user-service';
@@ -16,11 +17,16 @@ export class UsersController {
   @Post()
   async create(@Body() userDto: UserDto): Promise<void> {
     try {
-      await this.userService.execute(userDto);
+      await this.userService.create(userDto);
     } catch (error) {
       if (error instanceof ClientAlreadyExistsException) {
         throw new HttpException(error.message, HttpStatus.CONFLICT);
       }
     }
+  }
+
+  @Get()
+  async findAll() {
+    return await this.userService.findAll();
   }
 }
