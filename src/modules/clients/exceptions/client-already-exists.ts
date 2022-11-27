@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { BaseHttpException } from 'src/exceptions/base';
+import { BaseHttpException } from '../../../exceptions/base';
 
 export class ClientAlreadyExistsException extends BaseHttpException {
   constructor(readonly message: string) {
