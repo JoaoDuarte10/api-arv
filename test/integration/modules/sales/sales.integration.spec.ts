@@ -144,4 +144,12 @@ describe('Sales Integration', () => {
       expect(error.status).toBe(400);
     }
   });
+
+  it('Should register payment of the sales', async () => {
+    await sut.create(request, payload);
+    const idsales = repository.sales[0].idsales;
+    request.query['idsales'] = idsales;
+    await sut.registerPayment(request);
+    expect(repository.sales[0].paymentStatus).toBe(SalesStatus.PAID);
+  });
 });

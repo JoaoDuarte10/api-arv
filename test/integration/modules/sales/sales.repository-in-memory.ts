@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SalesDTO } from '../../../../src/modules/sales/sales.dto';
+import { SalesDTO, SalesStatus } from '../../../../src/modules/sales/sales.dto';
 
 @Injectable()
 export class SalesRepositoryInMemory {
@@ -44,5 +44,12 @@ export class SalesRepositoryInMemory {
       (sale) => sale.idusers === idusers && sale.idsales === idsales,
     );
     this.sales.splice(this.sales.indexOf(sale), 1);
+  }
+
+  async registerPayment(idusers: number, idsales: number): Promise<void> {
+    const sale = this.sales.find(
+      (sale) => sale.idusers === idusers && sale.idsales === idsales,
+    );
+    sale.paymentStatus = SalesStatus.PAID;
   }
 }
