@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+
+export enum SalesStatus {
+  PAID = 'PAID',
+  PENDING = 'PENDING',
+}
 
 export class SalesDTO {
   @ApiProperty()
@@ -14,23 +19,28 @@ export class SalesDTO {
 
   @ApiProperty()
   @IsNumber()
-  @IsOptional()
+  @IsNotEmpty()
   idclients?: number;
 
   @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   description: string;
 
   @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   date: string;
 
   @ApiProperty()
   @IsNumber()
-  @IsOptional()
+  @IsNotEmpty()
   total: number;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  paymentStatus: SalesStatus;
 
   @ApiProperty()
   @IsString()

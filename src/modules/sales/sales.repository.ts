@@ -15,9 +15,10 @@ export class SalesRepository {
                 idclients,
                 description,
                 date,
-                total
+                total,
+                payment_status
             ) VALUES (
-                $1, $2, $3, $4, $5
+                $1, $2, $3, $4, $5, $6
             )`,
       values: [
         sales.idusers,
@@ -25,6 +26,7 @@ export class SalesRepository {
         sales.description,
         sales.date,
         sales.total,
+        sales.paymentStatus,
       ],
     };
     await this.database.query(sql.query, sql.values);
