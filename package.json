@@ -1,7 +1,7 @@
 {
   "name": "api-arv",
   "version": "0.0.1",
-  "description": "",
+  "description": "Api que contém toda a lógica para a aplicação de agendamento e vendas.",
   "author": "joaoduarte147@gmail.com",
   "private": true,
   "license": "UNLICENSED",

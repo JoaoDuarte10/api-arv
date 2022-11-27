@@ -13,7 +13,7 @@ export class CreateClientService {
       'name',
       client.name,
     );
-    if (clientAlreadExists)
+    if (clientAlreadExists.length)
       throw new ClientAlreadyExistsException('Client alread exists');
     await this.repository.create({
       idusers: client.idusers,
