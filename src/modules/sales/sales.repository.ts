@@ -72,4 +72,12 @@ export class SalesRepository {
     };
     await this.database.query(sql.query, sql.values);
   }
+
+  async registerPayment(idusers: number, idsales: number): Promise<void> {
+    const sql = {
+      query: `UPDATE api_arv.sales SET payment_status = $1 WHERE idusers = $2`,
+      values: [idusers, idsales],
+    };
+    await this.database.query(sql.query, sql.values);
+  }
 }

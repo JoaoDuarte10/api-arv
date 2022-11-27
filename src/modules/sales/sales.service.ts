@@ -45,4 +45,8 @@ export class SalesService {
   async delete(idusers: number, idsales: number): Promise<void> {
     await this.salesRepository.delete(idusers, idsales);
   }
+
+  async registerPayment(idusers: number, idsales: number): Promise<void> {
+    await this.salesRepository.registerPayment(idusers, idsales);
+  }
 }

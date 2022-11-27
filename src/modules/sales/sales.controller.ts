@@ -83,4 +83,14 @@ export class SalesController {
     }
     await this.salesService.delete(req.user.idusers, idsales);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('register-payment')
+  async registerPayment(@Req() req: RequestType): Promise<void> {
+    const idsales = Number(req.query.idsales);
+    if (!idsales) {
+      throw new HttpException('Idsales is invalid', HttpStatus.BAD_REQUEST);
+    }
+    await this.salesService.registerPayment(req.user.idusers, idsales);
+  }
 }
