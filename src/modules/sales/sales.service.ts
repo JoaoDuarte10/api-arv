@@ -3,6 +3,7 @@ import { SalesRepository } from './sales.repository';
 import { SalesDTO, SalesStatus } from './sales.dto';
 import { TotalSalesIsEmptyException } from './exceptions/total-sales-is-empty';
 import { InvalidStatusSalesException } from './exceptions/invalid-status-sales';
+import { InvalidPaymentDateException } from './exceptions/invalid-payment-date';
 
 @Injectable()
 export class SalesService {
@@ -17,6 +18,9 @@ export class SalesService {
       sale.paymentStatus !== SalesStatus.PENDING
     ) {
       throw new InvalidStatusSalesException('Status sales is invalid');
+    }
+    if (sale.paymentStatus === SalesStatus.PENDING && !sale.paymentDate) {
+      throw new InvalidPaymentDateException('Payment date is invalid');
     }
     await this.salesRepository.create(sale);
   }
