@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { loadEnvs } from './config/load-envs';
 import { configProviders } from './providers/config-provider';
 import { Modules } from './modules/index';
+import { HealthCheckController } from './controllers/health-check';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { Modules } from './modules/index';
     }),
     ...Modules,
   ],
+  controllers: [HealthCheckController],
   providers: [...configProviders],
 })
 export class AppModule {}
