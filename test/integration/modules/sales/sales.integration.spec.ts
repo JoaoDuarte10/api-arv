@@ -1,6 +1,7 @@
 import { SalesController } from '../../../../src/modules/sales/sales.controller';
 import { SalesService } from '../../../../src/modules/sales/sales.service';
 import { SalesRepositoryInMemory } from './sales.repository-in-memory';
+import { SalesStatus } from '../../../../src/modules/sales/sales.dto';
 
 describe('Sales Integration', () => {
   let sut: SalesController;
@@ -50,6 +51,18 @@ describe('Sales Integration', () => {
 
   it('Should return status code 400 when paymentStatus is invalid', async () => {
     payload.paymentStatus = 'any';
+    try {
+      await sut.create(request, payload);
+    } catch (error) {
+      expect(error.status).toBe(400);
+    }
+    expect(repository.sales.length).toBe(0);
+  });
+
+  it('Should return status code 400 when paymentDate not provided when paymentStatus to be PENDING', async () => {
+    payload.paymentStatus = SalesStatus.PENDING;
+    delete payload.paymentDate;
+
     try {
       await sut.create(request, payload);
     } catch (error) {
