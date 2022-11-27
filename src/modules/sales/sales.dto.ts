@@ -44,6 +44,11 @@ export class SalesDTO {
 
   @ApiProperty()
   @IsString()
+  @IsNotEmpty()
+  paymentDate: SalesStatus;
+
+  @ApiProperty()
+  @IsString()
   @IsOptional()
   created_at?: string;
 
