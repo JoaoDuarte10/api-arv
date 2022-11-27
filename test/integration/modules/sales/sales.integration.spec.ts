@@ -71,6 +71,15 @@ describe('Sales Integration', () => {
     expect(repository.sales.length).toBe(0);
   });
 
+  it('Should set new date in paymentDate field when paymentStatus to be PAID', async () => {
+    payload.paymentStatus = SalesStatus.PAID;
+    payload.paymentDate = null;
+
+    await sut.create(request, payload);
+
+    expect(repository.sales[0].paymentDate).not.toBeFalsy();
+  });
+
   it('Should return sales by date', async () => {
     await sut.create(request, payload);
     request.query['date'] = payload.date;
