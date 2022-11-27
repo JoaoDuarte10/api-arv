@@ -22,6 +22,7 @@ export class SalesService {
     if (sale.paymentStatus === SalesStatus.PENDING && !sale.paymentDate) {
       throw new InvalidPaymentDateException('Payment date is invalid');
     }
+    sale.paymentDate = new Date().toISOString();
     await this.salesRepository.create(sale);
   }
 

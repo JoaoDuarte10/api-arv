@@ -45,7 +45,7 @@ export class SalesDTO {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  paymentDate: SalesStatus;
+  paymentDate: string;
 
   @ApiProperty()
   @IsString()
