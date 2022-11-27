@@ -34,7 +34,7 @@ export class SalesRepository {
     await this.database.query(sql.query, sql.values);
   }
 
-  async findByDate(idusers: number, date: string): Promise<any> {
+  async findByDate(idusers: number, date: string): Promise<SalesDTO[]> {
     const sql = {
       query: `SELECT * FROM api_arv.sales WHERE idusers = $1 AND date = $2`,
       values: [idusers, date],
@@ -43,11 +43,11 @@ export class SalesRepository {
     return rows;
   }
 
-  async finByPeriod(
+  async findByPeriod(
     idusers: number,
     date1: string,
     date2: string,
-  ): Promise<any> {
+  ): Promise<SalesDTO[]> {
     const sql = {
       query: `SELECT * FROM api_arv.sales WHERE idusers = $1 AND date BETWEEN $2 AND $3`,
       vales: [idusers, date1, date2],
@@ -56,7 +56,7 @@ export class SalesRepository {
     return rows;
   }
 
-  async finByClient(idusers: number, idclients: number): Promise<any> {
+  async findByClient(idusers: number, idclients: number): Promise<SalesDTO[]> {
     const sql = {
       query: `SELECT * FROM api_arv.sales WHERE idusers = $1 AND idclients = $2`,
       vales: [idusers, idclients],

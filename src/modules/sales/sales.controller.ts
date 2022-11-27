@@ -20,18 +20,19 @@ export class SalesController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Req() req: RequestType, @Body() sale: SalesDTO) {
+  async create(@Req() req: RequestType, @Body() sale: SalesDTO): Promise<void> {
     try {
-      const payload = sale;
-      payload.idusers = req.user.idusers;
+      const payload = {
+        idusers: req.user.idusers,
+        idclients: sale.idclients,
+        description: sale.description,
+        date: sale.date,
+        total: sale.total,
+        paymentStatus: sale.paymentStatus,
+        paymentDate: sale.paymentDate,
+      };
       await this.salesService.create(payload);
     } catch (error) {
-      if (error instanceof Error) {
-        throw new HttpException(
-          error.message,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
       throw new HttpException(
         {
           statusCode: error.getStatusCode(),
@@ -44,7 +45,7 @@ export class SalesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('date')
-  async findByDate(@Req() req: RequestType) {
+  async findByDate(@Req() req: RequestType): Promise<SalesDTO[]> {
     const date = req.query.date;
     if (!date) {
       throw new HttpException('Date is invalid', HttpStatus.BAD_REQUEST);
@@ -54,23 +55,23 @@ export class SalesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('period')
-  async finByPeriod(@Req() req: RequestType): Promise<any> {
+  async findByPeriod(@Req() req: RequestType): Promise<SalesDTO[]> {
     const date1 = req.query.date1;
     const date2 = req.query.date2;
     if (!date1 || !date2) {
       throw new HttpException('Date is invalid', HttpStatus.BAD_REQUEST);
     }
-    return await this.salesService.finByPeriod(req.user.idusers, date1, date2);
+    return await this.salesService.findByPeriod(req.user.idusers, date1, date2);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('client')
-  async finByClient(@Req() req: RequestType): Promise<any> {
+  async findByClient(@Req() req: RequestType): Promise<SalesDTO[]> {
     const idclients = req.query.idclients;
     if (!idclients) {
       throw new HttpException('Idclient is invalid', HttpStatus.BAD_REQUEST);
     }
-    return await this.salesService.finByClient(req.user.idusers, idclients);
+    return await this.salesService.findByClient(req.user.idusers, idclients);
   }
 
   @UseGuards(JwtAuthGuard)
