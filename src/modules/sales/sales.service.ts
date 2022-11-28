@@ -4,6 +4,7 @@ import { SalesDTO, SalesStatus } from './sales.dto';
 import { TotalSalesIsEmptyException } from './exceptions/total-sales-is-empty';
 import { InvalidStatusSalesException } from './exceptions/invalid-status-sales';
 import { InvalidPaymentDateException } from './exceptions/invalid-payment-date';
+import { SalesNotExistsException } from './exceptions/sales-not-exists';
 
 @Injectable()
 export class SalesService {
@@ -47,6 +48,11 @@ export class SalesService {
   }
 
   async registerPayment(idusers: number, idsales: number): Promise<void> {
+    const salesExists = await this.salesRepository.findOne(idusers, idsales);
+    console.log(salesExists);
+    if (!salesExists) {
+      throw new SalesNotExistsException('Sales not exists');
+    }
     await this.salesRepository.registerPayment(idusers, idsales);
   }
 }

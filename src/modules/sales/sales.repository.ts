@@ -65,6 +65,15 @@ export class SalesRepository {
     return rows;
   }
 
+  async findOne(idusers: number, idsales: number): Promise<SalesDTO> {
+    const sql = {
+      query: `SELECT * FROM api_arv.sales WHERE idusers = $1 AND idsales = $2`,
+      vales: [idusers, idsales],
+    };
+    const { rows } = await this.database.query(sql.query, sql.vales);
+    return rows[0];
+  }
+
   async delete(idusers: number, idsales: number): Promise<void> {
     const sql = {
       query: `DELETE FROM api_arv.sales WHERE idusers = $1 AND idsales = $2`,

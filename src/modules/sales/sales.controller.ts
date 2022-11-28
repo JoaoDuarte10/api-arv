@@ -91,6 +91,22 @@ export class SalesController {
     if (!idsales) {
       throw new HttpException('Idsales is invalid', HttpStatus.BAD_REQUEST);
     }
-    await this.salesService.registerPayment(req.user.idusers, idsales);
+    try {
+      await this.salesService.registerPayment(req.user.idusers, idsales);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new HttpException(
+          error.message,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+      throw new HttpException(
+        {
+          statusCode: error.getStatusCode(),
+          details: error.getDetails(),
+        },
+        error.getStatusCode(),
+      );
+    }
   }
 }
