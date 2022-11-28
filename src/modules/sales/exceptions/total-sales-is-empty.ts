@@ -1,15 +1,10 @@
-import { BaseHttpException } from '../../../exceptions/base';
+import { BaseHttpException } from '../../../exceptions/base-http';
 import { HttpStatus } from '@nestjs/common';
 
 export class TotalSalesIsEmptyException extends BaseHttpException {
   constructor(message: string) {
     const statusCode = HttpStatus.BAD_REQUEST;
 
-    super(statusCode, [
-      {
-        type: 'TotalSalesIsEmptyException',
-        message,
-      },
-    ]);
+    super(statusCode, 'TotalSalesIsEmptyException', message);
   }
 }

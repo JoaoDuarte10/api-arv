@@ -46,9 +46,6 @@ describe('Sales Integration', () => {
         await sut.create(request, payload);
       } catch (error) {
         expect(error.status).toBe(400);
-        expect(error.response.details[0].type).toBe(
-          'TotalSalesIsEmptyException',
-        );
       }
     });
 
