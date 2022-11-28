@@ -44,4 +44,14 @@ describe('ScheduleIntegration', () => {
     }
     expect(repository.schedules.length).toBe(0);
   });
+
+  it('Should return status code 409 when time schedule already exists', async () => {
+    try {
+      await sut.create(request, payload);
+      await sut.create(request, payload);
+    } catch (error) {
+      expect(error.status).toBe(409);
+    }
+    expect(repository.schedules.length).toBe(0);
+  });
 });
