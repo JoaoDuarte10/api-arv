@@ -1,12 +1,17 @@
 import { ScheduleController } from '../../../../src/modules/schedules/schedule.controller';
 import { ScheduleService } from '../../../../src/modules/schedules/schedule.service';
 import { ScheduleRepositoryInMemory } from '../../../../src/modules/schedules/repository/schedule.repository-in-memory';
+import {
+  ScheduleDTO,
+  ScheduleStatus,
+} from '../../../../src/modules/schedules/schedule-dto';
+
 describe('ScheduleIntegration', () => {
   let sut: ScheduleController;
   let service: ScheduleService;
   let repository: ScheduleRepositoryInMemory;
   let request = {} as any;
-  let payload = {} as any;
+  let payload = {} as ScheduleDTO;
 
   beforeEach(() => {
     repository = new ScheduleRepositoryInMemory();
@@ -14,19 +19,21 @@ describe('ScheduleIntegration', () => {
     sut = new ScheduleController(service);
 
     payload = {
+      idusers: null,
       idclients: 1,
       clientName: null,
       description: 'any_description',
-      time: new Date().getTime(),
+      time: new Date().getTime().toString(),
       date: new Date().toISOString(),
       pacote: false,
       atendenceCount: 0,
       totalAtendenceCount: 0,
-      status: 'PENDING',
+      status: ScheduleStatus.PENDING,
     };
 
     request = {
       user: { idusers: 1 },
+      query: {},
     };
   });
 
@@ -37,7 +44,7 @@ describe('ScheduleIntegration', () => {
     });
 
     it('Should return status code 400 when invalid parameters', async () => {
-      payload = {};
+      payload = {} as any;
       try {
         await sut.create(request, payload);
       } catch (error) {
@@ -54,6 +61,17 @@ describe('ScheduleIntegration', () => {
         expect(error.status).toBe(409);
       }
       expect(repository.schedules.length).toBe(0);
+    });
+  });
+
+  describe('FindByDate', () => {
+    it('Should return schedule by date', async () => {
+      await sut.create(request, payload);
+      request.query['date'] = payload.date;
+  
+      const result = await sut.findByDate(request);
+  
+      expect(result.length).toBeGreaterThanOrEqual(1);
     });
   });
 });
