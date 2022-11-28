@@ -39,6 +39,11 @@ export class ScheduleEntity {
         new InvalidParamsEntityException('Status cannot be FINISHED'),
       );
     }
+    if (params.pacote && !params.totalAtendenceCount) {
+      errors.push(
+        new InvalidParamsEntityException('Total Atendence Count is invalid'),
+      );
+    }
     if (errors.length > 0) {
       return new InvalidScheduleException(
         'Invalids params for create schedule entity',
