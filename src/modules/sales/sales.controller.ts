@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Post,
   Req,
   UseGuards,
@@ -96,7 +94,7 @@ export class SalesController {
     return handleController(async () => {
       const idsales = Number(req.query.idsales);
       if (!idsales) {
-        throw new HttpException('Idsales is invalid', HttpStatus.BAD_REQUEST);
+        throw new InvalidParamsRequestException('Idsales is invalid');
       }
       await this.salesService.registerPayment(req.user.idusers, idsales);
     });

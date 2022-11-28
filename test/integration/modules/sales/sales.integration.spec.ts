@@ -171,5 +171,14 @@ describe('Sales Integration', () => {
         expect(error.status).toBe(404);
       }
     });
+
+    it('Should return status code 400 when idsales is not provided', async () => {
+      try {
+        await sut.registerPayment(request);
+      } catch (error) {
+        console.log(error);
+        expect(error.status).toBe(400);
+      }
+    });
   });
 });
