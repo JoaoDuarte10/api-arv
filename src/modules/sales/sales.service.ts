@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SalesRepository } from './sales.repository';
+import { SalesRepository } from './repository/sales.repository-postgres';
 import { SalesDTO, SalesStatus } from './sales.dto';
 import { TotalSalesIsEmptyException } from './exceptions/total-sales-is-empty';
 import { InvalidStatusSalesException } from './exceptions/invalid-status-sales';

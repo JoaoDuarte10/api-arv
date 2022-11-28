@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Database } from '../../config/db-conn';
-import { SalesDTO } from './sales.dto';
+import { Database } from '../../../config/db-conn';
+import { SalesDTO } from '../sales.dto';
 
 @Injectable()
 export class SalesRepository {

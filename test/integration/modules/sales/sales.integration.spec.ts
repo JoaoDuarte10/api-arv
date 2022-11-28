@@ -1,6 +1,6 @@
 import { SalesController } from '../../../../src/modules/sales/sales.controller';
 import { SalesService } from '../../../../src/modules/sales/sales.service';
-import { SalesRepositoryInMemory } from './sales.repository-in-memory';
+import { SalesRepositoryInMemory } from '../../../../src/modules/sales/repository/sales.repository-in-memory';
 import { SalesStatus } from '../../../../src/modules/sales/sales.dto';
 
 describe('Sales Integration', () => {

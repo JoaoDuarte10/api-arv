@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SalesDTO, SalesStatus } from '../../../../src/modules/sales/sales.dto';
+import { SalesDTO, SalesStatus } from '../sales.dto';
 
 @Injectable()
 export class SalesRepositoryInMemory {
@@ -8,6 +8,7 @@ export class SalesRepositoryInMemory {
   async create(sales: SalesDTO): Promise<void> {
     sales.idsales = this.sales.length + 1;
     sales.created_at = new Date().toISOString();
+    sales.updated_at = null;
     Promise.resolve(this.sales.push(sales));
   }
 
