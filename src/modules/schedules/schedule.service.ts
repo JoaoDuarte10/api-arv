@@ -42,4 +42,8 @@ export class ScheduleService {
   ): Promise<ScheduleDTO[]> {
     return await this.repository.findByClient(idusers, idclients);
   }
+
+  async findAllExpireds(idusers: number): Promise<ScheduleDTO[]> {
+    return await this.repository.findAllExpireds(idusers);
+  }
 }

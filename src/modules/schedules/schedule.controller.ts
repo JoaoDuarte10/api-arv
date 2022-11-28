@@ -55,4 +55,13 @@ export class ScheduleController {
       return await this.service.findByClient(idusers, idclients);
     });
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('expireds')
+  async findAllExpireds(@Req() req: RequestType): Promise<ScheduleDTO[]> {
+    return handleController(async () => {
+      const idusers = req.user.idusers;
+      return await this.service.findAllExpireds(idusers);
+    });
+  }
 }

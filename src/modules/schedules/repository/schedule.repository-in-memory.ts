@@ -29,4 +29,12 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
         schedule.idusers === idusers && schedule.idclients === idclients,
     );
   }
+
+  async findAllExpireds(idusers: number): Promise<ScheduleDTO[]> {
+    return this.schedules.filter((schedule) => {
+      const currentDate = new Date();
+      const scheduleExpired = new Date(schedule.date) < currentDate;
+      return schedule.idusers === idusers && scheduleExpired;
+    });
+  }
 }
