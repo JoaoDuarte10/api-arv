@@ -48,6 +48,10 @@ export class ScheduleEntity {
     return new ScheduleEntity(params);
   }
 
+  getTime(): string {
+    return this.props.time;
+  }
+
   getProps(): ScheduleDTO {
     return this.props;
   }

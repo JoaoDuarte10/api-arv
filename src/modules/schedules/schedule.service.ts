@@ -4,6 +4,7 @@ import { ScheduleDTO } from './schedule-dto';
 import { ScheduleEntity } from './domain/schedule.entity';
 import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
 import { InvalidScheduleException } from './domain/exceptions/invalid-schedule';
+import { ScheduleAlreadyExistsException } from './exceptions/schedule-already-exists';
 
 @Injectable()
 export class ScheduleService {
@@ -17,6 +18,17 @@ export class ScheduleService {
         schedule.getDetails(),
       );
     }
+    const scheduleAlreadyExists = this.repository.findByTime(
+      params.idusers,
+      schedule.getTime(),
+    );
+
+    if (scheduleAlreadyExists) {
+      throw new ScheduleAlreadyExistsException(
+        'Schedule already exists in this time',
+      );
+    }
+
     await this.repository.create(schedule.getProps());
   }
 }

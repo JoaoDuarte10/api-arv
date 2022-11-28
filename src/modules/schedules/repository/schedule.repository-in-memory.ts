@@ -7,4 +7,10 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
   async create(params: ScheduleDTO): Promise<void> {
     this.schedules.push(params);
   }
+
+  async findByTime(idusers: number, time: string): Promise<ScheduleDTO> {
+    return this.schedules.find(
+      (schedule) => schedule.idusers === idusers && schedule.time === time,
+    );
+  }
 }
