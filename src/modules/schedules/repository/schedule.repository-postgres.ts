@@ -49,4 +49,13 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     const { rows } = await this.database.query(sql.query, sql.values);
     return rows[0];
   }
+
+  async findByDate(idusers: number, date: string): Promise<ScheduleDTO[]> {
+    const sql = {
+      query: 'SELECT * FROM api_arv.schedules WHERE idusers = $1 AND date = $2',
+      values: [idusers, date],
+    };
+    const { rows } = await this.database.query(sql.query, sql.values);
+    return rows;
+  }
 }

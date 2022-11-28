@@ -13,4 +13,10 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
       (schedule) => schedule.idusers === idusers && schedule.time === time,
     );
   }
+
+  async findByDate(idusers: number, date: string): Promise<ScheduleDTO[]> {
+    return this.schedules.filter(
+      (schedule) => schedule.idusers === idusers && schedule.date === date,
+    );
+  }
 }

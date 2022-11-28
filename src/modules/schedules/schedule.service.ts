@@ -18,7 +18,7 @@ export class ScheduleService {
         schedule.getDetails(),
       );
     }
-    const scheduleAlreadyExists = this.repository.findByTime(
+    const scheduleAlreadyExists = await this.repository.findByTime(
       params.idusers,
       schedule.getTime(),
     );
@@ -30,5 +30,9 @@ export class ScheduleService {
     }
 
     await this.repository.create(schedule.getProps());
+  }
+
+  async findByDate(idusers: number, date: string): Promise<ScheduleDTO[]> {
+    return await this.repository.findByDate(idusers, date);
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RequestType } from '../../types/request';
 import { ScheduleDTO } from './schedule-dto';
@@ -29,6 +29,16 @@ export class ScheduleController {
         status: body.status,
       };
       await this.service.create(payload);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('date')
+  async findByDate(@Req() req: RequestType): Promise<ScheduleDTO[]> {
+    return handleController(async () => {
+      const idusers = req.user.idusers;
+      const date = req.query.date;
+      return await this.service.findByDate(idusers, date);
     });
   }
 }

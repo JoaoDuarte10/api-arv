@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsBoolean } from 'class-validator';
 
 export enum ScheduleStatus {
   PENDING = 'PENDING',
@@ -8,19 +8,19 @@ export enum ScheduleStatus {
 
 export class ScheduleDTO {
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   @IsOptional()
   idusers: number;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   @IsOptional()
   idclients: number;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  clientName: number;
+  clientName: string;
 
   @ApiProperty()
   @IsString()
@@ -38,17 +38,17 @@ export class ScheduleDTO {
   date: string;
 
   @ApiProperty()
-  @IsString()
+  @IsBoolean()
   @IsOptional()
   pacote: boolean;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   @IsOptional()
   atendenceCount: number;
 
   @ApiProperty()
-  @IsString()
+  @IsNumber()
   @IsOptional()
   totalAtendenceCount: number;
 
