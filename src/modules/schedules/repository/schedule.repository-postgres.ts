@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ScheduleRepository } from './schedule.repository';
-import { Database, database } from '../../../config/db-conn';
+import { Database } from '../../../config/db-conn';
 import { ScheduleDTO } from '../schedule-dto';
 
 @Injectable()

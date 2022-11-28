@@ -95,4 +95,18 @@ describe('ScheduleIntegration', () => {
       }
     });
   });
+
+  describe('FindAllExpireds', () => {
+    it('Should return all schedules expireds', async () => {
+      const date = new Date();
+      const dateExpired = `${date.getFullYear()}-${date.getMonth()}-${
+        date.getDate() - 1
+      }`;
+      payload.idusers = request.user.idusers;
+      payload.date = dateExpired;
+      await repository.create(payload);
+      const result = await sut.findAllExpireds(request);
+      expect(result.length).toBe(1);
+    });
+  });
 });
