@@ -35,4 +35,11 @@ export class ScheduleService {
   async findByDate(idusers: number, date: string): Promise<ScheduleDTO[]> {
     return await this.repository.findByDate(idusers, date);
   }
+
+  async findByClient(
+    idusers: number,
+    idclients: number,
+  ): Promise<ScheduleDTO[]> {
+    return await this.repository.findByClient(idusers, idclients);
+  }
 }
