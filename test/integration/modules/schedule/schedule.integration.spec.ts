@@ -60,6 +60,17 @@ describe('ScheduleIntegration', () => {
       } catch (error) {
         expect(error.status).toBe(409);
       }
+      expect(repository.schedules.length).toBe(1);
+    });
+
+    it('Should return status code 400 when pacote is true and totalAtendenceCount to equal 0', async () => {
+      payload.pacote = true;
+      payload.totalAtendenceCount = 0;
+      try {
+        await sut.create(request, payload);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
       expect(repository.schedules.length).toBe(0);
     });
   });

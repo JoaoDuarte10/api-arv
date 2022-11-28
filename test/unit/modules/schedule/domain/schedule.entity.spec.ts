@@ -81,4 +81,11 @@ describe('ScheduleEntity', () => {
     const entity = ScheduleEntity.create(payload);
     expect(entity).toBeInstanceOf(InvalidScheduleException);
   });
+
+  it('Should return status code 400 when pacote is true and totalAtendenceCount to equal 0', async () => {
+    payload.pacote = true;
+    payload.totalAtendenceCount = 0;
+    const entity = ScheduleEntity.create(payload);
+    expect(entity).toBeInstanceOf(InvalidScheduleException);
+  });
 });
