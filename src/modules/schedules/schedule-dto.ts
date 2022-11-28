@@ -7,6 +7,8 @@ export enum ScheduleStatus {
 }
 
 export class ScheduleDTO {
+  idschedules?: number;
+
   @ApiProperty()
   @IsNumber()
   @IsOptional()

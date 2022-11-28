@@ -37,4 +37,19 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
       return schedule.idusers === idusers && scheduleExpired;
     });
   }
+
+  async delete(idusers: number, idschedules: number): Promise<void> {
+    const schedule = this.schedules.find(
+      (schedule) =>
+        schedule.idusers === idusers && schedule.idschedules === idschedules,
+    );
+    this.schedules.splice(this.schedules.indexOf(schedule), 1);
+  }
+
+  async findOne(idusers: number, idschedules: number): Promise<ScheduleDTO> {
+    return this.schedules.find(
+      (schedule) =>
+        schedule.idusers === idusers && schedule.idschedules === idschedules,
+    );
+  }
 }

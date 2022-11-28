@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RequestType } from '../../types/request';
 import { ScheduleDTO } from './schedule-dto';
@@ -62,6 +70,16 @@ export class ScheduleController {
     return handleController(async () => {
       const idusers = req.user.idusers;
       return await this.service.findAllExpireds(idusers);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async delete(@Req() req: RequestType): Promise<ScheduleDTO[]> {
+    return handleController(async () => {
+      const idusers = req.user.idusers;
+      const idschedules = req.query.idschedules;
+      return await this.service.delete(idusers, idschedules);
     });
   }
 }

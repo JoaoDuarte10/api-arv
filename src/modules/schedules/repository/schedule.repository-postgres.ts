@@ -128,6 +128,23 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     return this.normalizePayload(rows);
   }
 
+  async delete(idusers: number, idschedules: number): Promise<void> {
+    const sql = {
+      query: `DELETE FROM api_arv.schedules WHERE idusers = $1 AND idschedules = $2`,
+      values: [idusers, idschedules],
+    };
+    await this.database.query(sql.query, sql.values);
+  }
+
+  async findOne(idusers: number, idschedules: number): Promise<ScheduleDTO> {
+    const sql = {
+      query: `SELECT * FROM api_arv.schedules WHERE idusers = $1 AND idschedules = $2`,
+      values: [idusers, idschedules],
+    };
+    const { rows } = await this.database.query(sql.query, sql.values);
+    return rows[0];
+  }
+
   private normalizePayload(params: any[]): ScheduleDTO[] {
     return params.map((schedule) => {
       return {

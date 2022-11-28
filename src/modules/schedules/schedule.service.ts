@@ -5,6 +5,7 @@ import { ScheduleEntity } from './domain/schedule.entity';
 import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
 import { InvalidScheduleException } from './domain/exceptions/invalid-schedule';
 import { ScheduleAlreadyExistsException } from './exceptions/schedule-already-exists';
+import { ScheduleNotExistsException } from './exceptions/schedule-not-exists';
 
 @Injectable()
 export class ScheduleService {
@@ -45,5 +46,15 @@ export class ScheduleService {
 
   async findAllExpireds(idusers: number): Promise<ScheduleDTO[]> {
     return await this.repository.findAllExpireds(idusers);
+  }
+
+  async delete(idusers: number, idschedules: number): Promise<void> {
+    const scheduleExists = await this.repository.findOne(idusers, idschedules);
+    if (!scheduleExists) {
+      throw new ScheduleNotExistsException(
+        `Schedule with id ${idschedules} not exists`,
+      );
+    }
+    await this.repository.delete(idusers, idschedules);
   }
 }
