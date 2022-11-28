@@ -68,9 +68,9 @@ describe('ScheduleIntegration', () => {
     it('Should return schedule by date', async () => {
       await sut.create(request, payload);
       request.query['date'] = payload.date;
-  
+
       const result = await sut.findByDate(request);
-  
+
       expect(result.length).toBeGreaterThanOrEqual(1);
     });
   });

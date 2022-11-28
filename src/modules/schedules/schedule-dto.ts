@@ -10,7 +10,7 @@ export class ScheduleDTO {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  idusers: number;
+  idusers?: number;
 
   @ApiProperty()
   @IsNumber()
@@ -56,4 +56,14 @@ export class ScheduleDTO {
   @IsString()
   @IsOptional()
   status: ScheduleStatus;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  phone?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  createdAt?: string;
 }
