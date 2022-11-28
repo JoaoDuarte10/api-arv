@@ -49,7 +49,6 @@ export class SalesService {
 
   async registerPayment(idusers: number, idsales: number): Promise<void> {
     const salesExists = await this.salesRepository.findOne(idusers, idsales);
-    console.log(salesExists);
     if (!salesExists) {
       throw new SalesNotExistsException('Sales not exists');
     }
