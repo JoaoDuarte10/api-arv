@@ -74,4 +74,25 @@ describe('ScheduleIntegration', () => {
       expect(result.length).toBeGreaterThanOrEqual(1);
     });
   });
+
+  describe('FindByClient', () => {
+    it('Should return schedule by idclients', async () => {
+      await sut.create(request, payload);
+      request.query['idclients'] = payload.idclients;
+
+      const result = await sut.findByClient(request);
+
+      expect(result.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('Should return status code 400 when idclients is not provided', async () => {
+      await sut.create(request, payload);
+      try {
+        await sut.findByClient(request);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
+  });
 });
