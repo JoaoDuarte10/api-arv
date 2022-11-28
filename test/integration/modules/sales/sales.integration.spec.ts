@@ -145,11 +145,22 @@ describe('Sales Integration', () => {
     }
   });
 
-  it('Should register payment of the sales', async () => {
-    await sut.create(request, payload);
-    const idsales = repository.sales[0].idsales;
-    request.query['idsales'] = idsales;
-    await sut.registerPayment(request);
-    expect(repository.sales[0].paymentStatus).toBe(SalesStatus.PAID);
+  describe('RegisterPayment', () => {
+    it('Should register payment of the sales', async () => {
+      await sut.create(request, payload);
+      const idsales = repository.sales[0].idsales;
+      request.query['idsales'] = idsales;
+      await sut.registerPayment(request);
+      expect(repository.sales[0].paymentStatus).toBe(SalesStatus.PAID);
+    });
+
+    it('Should return status code 404 when sale not found', async () => {
+      request.query['idsales'] = 1;
+      try {
+        await sut.registerPayment(request);
+      } catch (error) {
+        expect(error.status).toBe(404);
+      }
+    });
   });
 });

@@ -39,6 +39,12 @@ export class SalesRepositoryInMemory {
     );
   }
 
+  async findOne(idusers: number, idsales: number): Promise<any> {
+    return this.sales.find(
+      (sale) => sale.idusers === idusers && sale.idsales === idsales,
+    );
+  }
+
   async delete(idusers: number, idsales: number): Promise<void> {
     const sale = this.sales.find(
       (sale) => sale.idusers === idusers && sale.idsales === idsales,
