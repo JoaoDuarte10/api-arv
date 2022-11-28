@@ -120,4 +120,23 @@ describe('ScheduleIntegration', () => {
       expect(result.length).toBe(1);
     });
   });
+
+  describe('Delete', () => {
+    it('Should delete a schedule', async () => {
+      await sut.create(request, payload);
+      request.query['idschedules'] = payload.idschedules;
+      await sut.delete(request);
+      expect(repository.schedules.length).toBe(0);
+    });
+
+    it('Should return status code 404 when schedule not exists', async () => {
+      request.query['idschedules'] = 2;
+      try {
+        await sut.delete(request);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(404);
+      }
+    });
+  });
 });
