@@ -233,4 +233,27 @@ describe('ScheduleIntegration', () => {
       }
     });
   });
+
+  describe('GetAllFinished', () => {
+    beforeEach(async () => {
+      await sut.create(request, payload);
+      request.query['idschedules'] = payload.idschedules;
+      await sut.finish(request);
+    });
+
+    it('Should return schedules finisehds', async () => {
+      request.query['idclients'] = payload.idclients;
+      const result = await sut.getAllFinished(request);
+      expect(result[0].status).toBe(ScheduleStatus.FINISHED);
+    });
+
+    it('Should return status code 400 when idclients is not provided', async () => {
+      try {
+        await sut.getAllFinished(request);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
+  });
 });
