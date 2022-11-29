@@ -33,6 +33,10 @@ export class ScheduleService {
     await this.repository.create(schedule.getProps());
   }
 
+  async update(params: ScheduleDTO): Promise<void> {
+    await this.repository.update(params);
+  }
+
   async findByDate(idusers: number, date: string): Promise<ScheduleDTO[]> {
     return await this.repository.findByDate(idusers, date);
   }

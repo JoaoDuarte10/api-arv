@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -38,6 +39,30 @@ export class ScheduleController {
         status: body.status,
       };
       await this.service.create(payload);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put()
+  async update(
+    @Req() req: RequestType,
+    @Body() body: ScheduleDTO,
+  ): Promise<void> {
+    return handleController(async () => {
+      const payload = {
+        idschedules: body.idschedules,
+        idusers: req.user.idusers,
+        idclients: body.idclients,
+        clientName: body.clientName,
+        description: body.description,
+        time: body.time,
+        date: body.date,
+        pacote: body.pacote,
+        atendenceCount: body.atendenceCount,
+        totalAtendenceCount: body.totalAtendenceCount,
+        status: body.status,
+      };
+      await this.service.update(payload);
     });
   }
 

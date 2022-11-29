@@ -41,9 +41,42 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     await this.database.query(sql.query, sql.values);
   }
 
+  async update(params: ScheduleDTO): Promise<void> {
+    const sql = {
+      query: `UPDATE api_arv.schedules SET
+                idusers = $1,
+                idclients = $2,
+                client_name = $3,
+                description = $4,
+                time = $5,
+                date = $6,
+                pacote = $7,
+                atendence_count = $8,
+                total_atendence_count = $9,
+                status = $10
+              WHERE idusers = $11 AND idschedules = $12;`,
+      values: [
+        params.idusers,
+        params.idclients,
+        params.clientName,
+        params.description,
+        params.time,
+        params.date,
+        params.pacote,
+        params.atendenceCount,
+        params.totalAtendenceCount,
+        params.status,
+        params.idusers,
+        params.idschedules,
+      ],
+    };
+    await this.database.query(sql.query, sql.values);
+  }
+
   async findByTime(idusers: number, time: string): Promise<ScheduleDTO> {
     const sql = {
-      query: 'SELECT * FROM api_arv.schedules WHERE idusers = $1 AND time = $2',
+      query:
+        'SELECT * FROM api_arv.schedules WHERE idusers = $1 AND time = $2 ORDER BY s.idschedules;',
       values: [idusers, time],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -68,7 +101,8 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.date = $2`,
+              WHERE s.idusers = $1 AND s.date = $2
+              ORDER BY s.idschedules;`,
       values: [idusers, date],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -96,7 +130,8 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.idclients = $2`,
+              WHERE s.idusers = $1 AND s.idclients = $2
+              ORDER BY s.idschedules;`,
       values: [idusers, idclients],
     };
     const { rows } = await this.database.query(sql.query, sql.values);

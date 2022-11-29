@@ -5,6 +5,17 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
   schedules: ScheduleDTO[] = [];
 
   async create(params: ScheduleDTO): Promise<void> {
+    params.idschedules = this.schedules.length + 1;
+    this.schedules.push(params);
+  }
+
+  async update(params: ScheduleDTO): Promise<void> {
+    const schedule = this.schedules.find(
+      (schedule) =>
+        schedule.idusers === params.idusers &&
+        schedule.idschedules === params.idschedules,
+    );
+    this.schedules.splice(this.schedules.indexOf(schedule), 1);
     this.schedules.push(params);
   }
 
