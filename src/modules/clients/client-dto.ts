@@ -29,9 +29,9 @@ export class ClientDto {
 
   @ApiProperty()
   @IsOptional()
-  created_at: string;
+  created_at?: string;
 
   @ApiProperty()
   @IsOptional()
-  updated_at: string;
+  updated_at?: string;
 }

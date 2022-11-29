@@ -176,7 +176,6 @@ describe('Sales Integration', () => {
       try {
         await sut.registerPayment(request);
       } catch (error) {
-        console.log(error);
         expect(error.status).toBe(400);
       }
     });

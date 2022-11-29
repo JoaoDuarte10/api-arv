@@ -1,16 +1,9 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Req,
-  HttpException,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { ClientDto } from '../client-dto';
 import { CreateClientService } from '../services/create';
-import { ClientAlreadyExistsException } from '../exceptions/client-already-exists';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RequestType } from '../../../types/request';
+import { handleController } from '../../../infra/http/handle-controller';
 
 @Controller('client')
 export class CreateClientController {
@@ -22,19 +15,16 @@ export class CreateClientController {
     @Req() req: RequestType,
     @Body() clientDto: ClientDto,
   ): Promise<void> {
-    try {
-      clientDto.idusers = req.user.idusers;
-      await this.service.execute(clientDto);
-    } catch (error) {
-      if (error instanceof ClientAlreadyExistsException) {
-        throw new HttpException(
-          {
-            statusCode: error.getStatusCode(),
-            details: error.getDetails(),
-          },
-          error.getStatusCode(),
-        );
-      }
-    }
+    return handleController(async () => {
+      const payload = {
+        idusers: req.user.idusers,
+        idclients: clientDto.idclients,
+        name: clientDto.name,
+        email: clientDto.email,
+        phone: clientDto.phone,
+        idsegment: clientDto.idsegment,
+      };
+      await this.service.execute(payload);
+    });
   }
 }

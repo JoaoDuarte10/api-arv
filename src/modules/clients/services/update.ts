@@ -1,18 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { ClientDto } from '../client-dto';
 import { ClientRepository } from '../repository/client';
+import { ClientNotExistsException } from '../exceptions/client-not-exists';
 
 @Injectable()
 export class UpdateClientService {
   constructor(private readonly repository: ClientRepository) {}
 
   async execute(client: ClientDto): Promise<void> {
-    const clientAlreadExists = await this.repository.findBy(
+    const clientExists = await this.repository.findBy(
       client.idusers,
       'idclients',
       client.idclients,
     );
-    if (!clientAlreadExists) throw new Error();
+    if (!clientExists.length)
+      throw new ClientNotExistsException('Client not exists');
     await this.repository.update({
       idusers: client.idusers,
       idclients: client.idclients,
