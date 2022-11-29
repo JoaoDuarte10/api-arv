@@ -34,6 +34,13 @@ export class ScheduleService {
   }
 
   async update(params: ScheduleDTO): Promise<void> {
+    const schedule = ScheduleEntity.create(params);
+    if (schedule instanceof InvalidScheduleException) {
+      throw new InvalidParamsRequestException(
+        schedule.getMessage(),
+        schedule.getDetails(),
+      );
+    }
     await this.repository.update(params);
   }
 
