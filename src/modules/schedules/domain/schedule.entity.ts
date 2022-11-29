@@ -60,4 +60,10 @@ export class ScheduleEntity {
   getProps(): ScheduleDTO {
     return this.props;
   }
+
+  finish() {
+    if (this.props.status !== ScheduleStatus.FINISHED) {
+      this.props.status = ScheduleStatus.FINISHED;
+    }
+  }
 }

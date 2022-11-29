@@ -179,6 +179,14 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     return rows[0];
   }
 
+  async finish(idusers: number, idschedules: number): Promise<void> {
+    const sql = {
+      query: `UPDATE api_arv.schedules SET status = 'FINISHED' WHERE idusers = $1 AND idschedules = $2`,
+      values: [idusers, idschedules],
+    };
+    await this.database.query(sql.query, sql.values);
+  }
+
   private normalizePayload(params: any[]): ScheduleDTO[] {
     return params.map((schedule) => {
       return {

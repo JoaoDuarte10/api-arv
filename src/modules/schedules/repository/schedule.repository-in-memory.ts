@@ -1,4 +1,4 @@
-import { ScheduleDTO } from '../schedule-dto';
+import { ScheduleDTO, ScheduleStatus } from '../schedule-dto';
 import { ScheduleRepository } from './schedule.repository';
 
 export class ScheduleRepositoryInMemory implements ScheduleRepository {
@@ -62,5 +62,13 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
       (schedule) =>
         schedule.idusers === idusers && schedule.idschedules === idschedules,
     );
+  }
+
+  async finish(idusers: number, idschedules: number): Promise<void> {
+    const schedule = this.schedules.find(
+      (schedule) =>
+        schedule.idusers === idusers && schedule.idschedules === idschedules,
+    );
+    schedule.status = ScheduleStatus.FINISHED;
   }
 }

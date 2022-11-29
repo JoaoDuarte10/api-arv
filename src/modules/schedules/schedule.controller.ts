@@ -75,6 +75,9 @@ export class ScheduleController {
     return handleController(async () => {
       const idusers = req.user.idusers;
       const date = req.query.date;
+      if (!date) {
+        throw new InvalidParamsRequestException('Date is invalid');
+      }
       return await this.service.findByDate(idusers, date);
     });
   }
@@ -103,11 +106,27 @@ export class ScheduleController {
 
   @UseGuards(JwtAuthGuard)
   @Delete()
-  async delete(@Req() req: RequestType): Promise<ScheduleDTO[]> {
+  async delete(@Req() req: RequestType): Promise<void> {
     return handleController(async () => {
       const idusers = req.user.idusers;
       const idschedules = req.query.idschedules;
+      if (!idschedules) {
+        throw new InvalidParamsRequestException('Idschedules is invalid');
+      }
       return await this.service.delete(idusers, idschedules);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  async finish(@Req() req: RequestType): Promise<void> {
+    return handleController(async () => {
+      const idusers = req.user.idusers;
+      const idschedules = req.query.idschedules;
+      if (!idschedules) {
+        throw new InvalidParamsRequestException('Idschedules is invalid');
+      }
+      return await this.service.finish(idusers, idschedules);
     });
   }
 }

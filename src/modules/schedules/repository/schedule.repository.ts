@@ -12,4 +12,5 @@ export abstract class ScheduleRepository {
   abstract findAllExpireds(idusers: number): Promise<ScheduleDTO[]>;
   abstract delete(idusers: number, idschedules: number): Promise<void>;
   abstract findOne(idusers: number, idschedules: number): Promise<ScheduleDTO>;
+  abstract finish(idusers: number, idschedules: number): Promise<void>;
 }

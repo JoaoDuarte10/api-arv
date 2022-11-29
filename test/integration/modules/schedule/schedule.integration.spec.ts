@@ -129,6 +129,15 @@ describe('ScheduleIntegration', () => {
 
       expect(result.length).toBeGreaterThanOrEqual(1);
     });
+
+    it('Should return status code 400 when idschedules is not provided', async () => {
+      try {
+        await sut.findByDate(request);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
   });
 
   describe('FindByClient', () => {
@@ -181,6 +190,46 @@ describe('ScheduleIntegration', () => {
         expect(true).toBe(false);
       } catch (error) {
         expect(error.status).toBe(404);
+      }
+    });
+
+    it('Should return status code 400 when idschedule is invalid', async () => {
+      try {
+        await sut.delete(request);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
+  });
+
+  describe('Finish', () => {
+    beforeEach(async () => {
+      await sut.create(request, payload);
+    });
+
+    it('Should finish schedule', async () => {
+      request.query['idschedules'] = payload.idschedules;
+      await sut.finish(request);
+      expect(repository.schedules[0].status).toBe(ScheduleStatus.FINISHED);
+    });
+
+    it('Should return status code 404 when schedule not exists', async () => {
+      try {
+        request.query['idschedules'] = Math.random();
+        await sut.finish(request);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(404);
+      }
+    });
+
+    it('Should return status code 404 when idschedules is not provided', async () => {
+      try {
+        await sut.finish(request);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
       }
     });
   });

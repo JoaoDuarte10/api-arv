@@ -76,4 +76,14 @@ export class ScheduleService {
     }
     await this.repository.delete(idusers, idschedules);
   }
+
+  async finish(idusers: number, idschedules: number): Promise<void> {
+    const scheduleExists = await this.repository.findOne(idusers, idschedules);
+    if (!scheduleExists) {
+      throw new ScheduleNotExistsException(
+        `Schedule with id ${idschedules} not exists`,
+      );
+    }
+    await this.repository.finish(idusers, idschedules);
+  }
 }
