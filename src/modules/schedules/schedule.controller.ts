@@ -62,6 +62,9 @@ export class ScheduleController {
         totalAtendenceCount: body.totalAtendenceCount,
         status: body.status,
       };
+      if (!payload.idschedules) {
+        throw new InvalidParamsRequestException('Idschedules is invalid');
+      }
       await this.service.update(payload);
     });
   }
