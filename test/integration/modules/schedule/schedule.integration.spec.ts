@@ -83,6 +83,19 @@ describe('ScheduleIntegration', () => {
       await sut.update(request, payload);
       expect(repository.schedules[0].description).toBe(newDescription);
     });
+
+    it('Should return status code 400 when idschedules is not provided', async () => {
+      await sut.create(request, payload);
+      const newDescription = 'Update description';
+      payload.description = newDescription;
+      delete payload.idschedules;
+      try {
+        await sut.update(request, payload);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
   });
 
   describe('FindByDate', () => {
