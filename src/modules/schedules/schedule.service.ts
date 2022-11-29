@@ -41,6 +41,14 @@ export class ScheduleService {
         schedule.getDetails(),
       );
     }
+    const scheduleExists = await this.repository.findOne(
+      params.idusers,
+      params.idschedules,
+    );
+
+    if (!scheduleExists) {
+      throw new ScheduleNotExistsException('Schedule not exists');
+    }
     await this.repository.update(params);
   }
 
