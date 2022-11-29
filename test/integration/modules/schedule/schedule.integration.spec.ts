@@ -96,6 +96,18 @@ describe('ScheduleIntegration', () => {
         expect(error.status).toBe(400);
       }
     });
+
+    it('Should return status code 400 when status to be FINISHED', async () => {
+      await sut.create(request, payload);
+      payload.idschedules = 1;
+      payload.status = ScheduleStatus.FINISHED;
+      try {
+        await sut.update(request, payload);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
   });
 
   describe('FindByDate', () => {
