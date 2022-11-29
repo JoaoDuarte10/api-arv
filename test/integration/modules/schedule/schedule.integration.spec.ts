@@ -75,6 +75,16 @@ describe('ScheduleIntegration', () => {
     });
   });
 
+  describe('Update', () => {
+    it('Should update a schedule', async () => {
+      await sut.create(request, payload);
+      const newDescription = 'Update description';
+      payload.description = newDescription;
+      await sut.update(request, payload);
+      expect(repository.schedules[0].description).toBe(newDescription);
+    });
+  });
+
   describe('FindByDate', () => {
     it('Should return schedule by date', async () => {
       await sut.create(request, payload);
