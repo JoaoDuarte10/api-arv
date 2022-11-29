@@ -108,6 +108,16 @@ describe('ScheduleIntegration', () => {
         expect(error.status).toBe(400);
       }
     });
+
+    it('Should return status code 404 when schedule not exists', async () => {
+      payload.idschedules = 1;
+      try {
+        await sut.update(request, payload);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(404);
+      }
+    });
   });
 
   describe('FindByDate', () => {
