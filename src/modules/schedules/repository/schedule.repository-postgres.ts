@@ -75,8 +75,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
 
   async findByTime(idusers: number, time: string): Promise<ScheduleDTO> {
     const sql = {
-      query:
-        'SELECT * FROM api_arv.schedules WHERE idusers = $1 AND time = $2 ORDER BY s.idschedules;',
+      query: `SELECT * FROM api_arv.schedules WHERE idusers = $1 AND time = $2  AND status = 'PENDING' ORDER BY s.idschedules;`,
       values: [idusers, time],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -86,22 +85,22 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
   async findByDate(idusers: number, date: string): Promise<ScheduleDTO[]> {
     const sql = {
       query: `SELECT
-              s.idschedules,
-              s.idclients,
-              s.client_name,
-              c.name,
-              c.phone,
-              s.description,
-              s.time,
-              s.date,
-              s.pacote,
-              s.atendence_count,
-              s.total_atendence_count,
-              s.status,
-              s.created_at
+                s.idschedules,
+                s.idclients,
+                s.client_name,
+                c.name,
+                c.phone,
+                s.description,
+                s.time,
+                s.date,
+                s.pacote,
+                s.atendence_count,
+                s.total_atendence_count,
+                s.status,
+                s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.date = $2
+              WHERE s.idusers = $1 AND s.date = $2 AND status = 'PENDING'
               ORDER BY s.idschedules;`,
       values: [idusers, date],
     };
@@ -115,22 +114,22 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
   ): Promise<ScheduleDTO[]> {
     const sql = {
       query: `SELECT
-              s.idschedules,
-              s.idclients,
-              s.client_name,
-              c.name,
-              c.phone,
-              s.description,
-              s.time,
-              s.date,
-              s.pacote,
-              s.atendence_count,
-              s.total_atendence_count,
-              s.status,
-              s.created_at
+                s.idschedules,
+                s.idclients,
+                s.client_name,
+                c.name,
+                c.phone,
+                s.description,
+                s.time,
+                s.date,
+                s.pacote,
+                s.atendence_count,
+                s.total_atendence_count,
+                s.status,
+                s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.idclients = $2
+              WHERE s.idusers = $1 AND s.idclients = $2 AND status = 'PENDING'
               ORDER BY s.idschedules;`,
       values: [idusers, idclients],
     };
@@ -141,22 +140,22 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
   async findAllExpireds(idusers: number): Promise<ScheduleDTO[]> {
     const sql = {
       query: `SELECT
-              s.idschedules,
-              s.idclients,
-              s.client_name,
-              c.name,
-              c.phone,
-              s.description,
-              s.time,
-              s.date,
-              s.pacote,
-              s.atendence_count,
-              s.total_atendence_count,
-              s.status,
-              s.created_at
+                s.idschedules,
+                s.idclients,
+                s.client_name,
+                c.name,
+                c.phone,
+                s.description,
+                s.time,
+                s.date,
+                s.pacote,
+                s.atendence_count,
+                s.total_atendence_count,
+                s.status,
+                s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND current_date - s.date > 0`,
+              WHERE s.idusers = $1 AND current_date - s.date > 0 AND status = 'PENDING'`,
       values: [idusers],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
