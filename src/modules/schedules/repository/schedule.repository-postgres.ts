@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ScheduleRepository } from './schedule.repository';
 import { Database } from '../../../config/db-conn';
-import { ScheduleDTO } from '../schedule-dto';
+import { ScheduleDTO, ScheduleStatus } from '../schedule-dto';
 
 @Injectable()
 export class ScheduleRepositoryPostgres implements ScheduleRepository {
@@ -185,6 +185,18 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, idschedules],
     };
     await this.database.query(sql.query, sql.values);
+  }
+
+  async getAllFinished(
+    idusers: number,
+    idclients: number,
+  ): Promise<ScheduleDTO[]> {
+    const sql = {
+      query: `SELECT * FROM api_arv.schedules WHERE idusers = $1 AND status = $2 AND idclients = $3`,
+      values: [idusers, ScheduleStatus.FINISHED, idclients],
+    };
+    const { rows } = await this.database.query(sql.query, sql.values);
+    return rows;
   }
 
   private normalizePayload(params: any[]): ScheduleDTO[] {

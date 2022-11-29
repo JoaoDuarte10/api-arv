@@ -86,4 +86,11 @@ export class ScheduleService {
     }
     await this.repository.finish(idusers, idschedules);
   }
+
+  async getAllFinished(
+    idusers: number,
+    idclients: number,
+  ): Promise<ScheduleDTO[]> {
+    return await this.repository.getAllFinished(idusers, idclients);
+  }
 }

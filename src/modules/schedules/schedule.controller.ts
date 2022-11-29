@@ -129,4 +129,17 @@ export class ScheduleController {
       return await this.service.finish(idusers, idschedules);
     });
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('finished')
+  async getAllFinished(@Req() req: RequestType): Promise<ScheduleDTO[]> {
+    return handleController(async () => {
+      const idusers = req.user.idusers;
+      const idclients = req.query.idclients;
+      if (!idclients) {
+        throw new InvalidParamsRequestException('Idclients is invalid');
+      }
+      return await this.service.getAllFinished(idusers, idclients);
+    });
+  }
 }
