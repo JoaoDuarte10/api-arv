@@ -19,6 +19,7 @@ describe('ScheduleIntegration', () => {
     sut = new ScheduleController(service);
 
     payload = {
+      idschedules: 1,
       idusers: null,
       idclients: 1,
       clientName: null,
@@ -99,7 +100,6 @@ describe('ScheduleIntegration', () => {
 
     it('Should return status code 400 when status to be FINISHED', async () => {
       await sut.create(request, payload);
-      payload.idschedules = 1;
       payload.status = ScheduleStatus.FINISHED;
       try {
         await sut.update(request, payload);
@@ -110,7 +110,7 @@ describe('ScheduleIntegration', () => {
     });
 
     it('Should return status code 404 when schedule not exists', async () => {
-      payload.idschedules = 1;
+      payload.idschedules = Math.random();
       try {
         await sut.update(request, payload);
         expect(true).toBe(false);
