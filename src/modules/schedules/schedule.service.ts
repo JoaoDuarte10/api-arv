@@ -84,7 +84,11 @@ export class ScheduleService {
         `Schedule with id ${idschedules} not exists`,
       );
     }
-    await this.repository.finish(idusers, idschedules);
+    const schedule = ScheduleEntity.create(scheduleExists);
+    if (schedule instanceof ScheduleEntity) {
+      schedule.finish();
+      await this.repository.update(schedule.getProps());
+    }
   }
 
   async getAllFinished(

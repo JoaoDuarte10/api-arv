@@ -61,9 +61,35 @@ export class ScheduleEntity {
     return this.props;
   }
 
-  finish() {
-    if (this.props.status !== ScheduleStatus.FINISHED) {
+  finish(): void {
+    if (
+      this.isPacote() &&
+      this.props.atendenceCount < this.props.totalAtendenceCount
+    ) {
+      this.addAtendence();
+    }
+    if (this.isValidForFinish()) {
       this.props.status = ScheduleStatus.FINISHED;
     }
+  }
+
+  private addAtendence(): void {
+    this.props.atendenceCount = this.props.atendenceCount + 1;
+  }
+
+  private isPacote(): boolean {
+    return this.props.pacote;
+  }
+
+  private pacoteIsValidForFinish(): boolean {
+    return this.props.atendenceCount === this.props.totalAtendenceCount;
+  }
+
+  private isValidForFinish(): boolean {
+    const statusIsPending = this.props.status !== ScheduleStatus.FINISHED;
+    if (this.isPacote()) {
+      return this.pacoteIsValidForFinish() && statusIsPending;
+    }
+    return statusIsPending;
   }
 }

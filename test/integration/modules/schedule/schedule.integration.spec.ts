@@ -232,6 +232,35 @@ describe('ScheduleIntegration', () => {
         expect(error.status).toBe(400);
       }
     });
+
+    it('Should add + 1 in atendenceCount when pacote is true and atendenceCount < totalAtendenceCount', async () => {
+      payload.time = '12:00';
+      payload.idschedules = 2;
+      payload.pacote = true;
+      payload.totalAtendenceCount = 2;
+      await sut.create(request, payload);
+      request.query['idschedules'] = payload.idschedules;
+
+      await sut.finish(request);
+
+      expect(repository.schedules[1].atendenceCount).toBe(1);
+      expect(repository.schedules[1].status).toBe(ScheduleStatus.PENDING);
+    });
+
+    it('Should finished schedule when pacote is true', async () => {
+      payload.time = '12:00';
+      payload.idschedules = 2;
+      payload.pacote = true;
+      payload.totalAtendenceCount = 2;
+
+      await sut.create(request, payload);
+      request.query['idschedules'] = payload.idschedules;
+
+      await sut.finish(request);
+      await sut.finish(request);
+
+      expect(repository.schedules[1].status).toBe(ScheduleStatus.FINISHED);
+    });
   });
 
   describe('GetAllFinished', () => {
