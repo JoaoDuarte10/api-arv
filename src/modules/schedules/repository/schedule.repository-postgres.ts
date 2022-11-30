@@ -75,11 +75,28 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
 
   async findByTime(idusers: number, time: string): Promise<ScheduleDTO> {
     const sql = {
-      query: `SELECT * FROM api_arv.schedules WHERE idusers = $1 AND time = $2  AND status = 'PENDING' ORDER BY s.idschedules;`,
-      values: [idusers, time],
+      query: `SELECT
+                s.idschedules,
+                s.idclients,
+                s.client_name,
+                c.name,
+                c.phone,
+                s.description,
+                s.time,
+                s.date,
+                s.pacote,
+                s.atendence_count,
+                s.total_atendence_count,
+                s.status,
+                s.created_at
+              FROM api_arv.schedules s
+              LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
+              WHERE idusers = $1 AND time = $2  AND status = $3
+              ORDER BY s.idschedules;`,
+      values: [idusers, time, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows[0];
+    return this.normalizePayload(rows)[0];
   }
 
   async findByDate(idusers: number, date: string): Promise<ScheduleDTO[]> {
@@ -100,9 +117,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
                 s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.date = $2 AND status = 'PENDING'
+              WHERE s.idusers = $1 AND s.date = $2 AND status = $3
               ORDER BY s.idschedules;`,
-      values: [idusers, date],
+      values: [idusers, date, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
     return this.normalizePayload(rows);
@@ -129,9 +146,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
                 s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.idclients = $2 AND status = 'PENDING'
+              WHERE s.idusers = $1 AND s.idclients = $2 AND status = $3
               ORDER BY s.idschedules;`,
-      values: [idusers, idclients],
+      values: [idusers, idclients, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
     return this.normalizePayload(rows);
@@ -155,8 +172,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
                 s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND current_date - s.date > 0 AND status = 'PENDING'`,
-      values: [idusers],
+              WHERE s.idusers = $1 AND current_date - s.date > 0 AND status = $2
+              ORDER BY s.idschedules;`,
+      values: [idusers, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
     return this.normalizePayload(rows);
@@ -172,17 +190,34 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
 
   async findOne(idusers: number, idschedules: number): Promise<ScheduleDTO> {
     const sql = {
-      query: `SELECT * FROM api_arv.schedules WHERE idusers = $1 AND idschedules = $2`,
+      query: `SELECT
+                s.idschedules,
+                s.idclients,
+                s.client_name,
+                c.name,
+                c.phone,
+                s.description,
+                s.time,
+                s.date,
+                s.pacote,
+                s.atendence_count,
+                s.total_atendence_count,
+                s.status,
+                s.created_at
+              FROM api_arv.schedules s
+              LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
+              WHERE s.idusers = $1 AND s.idschedules = $2
+              ORDER BY idschedules;`,
       values: [idusers, idschedules],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows[0];
+    return this.normalizePayload(rows)[0];
   }
 
   async finish(idusers: number, idschedules: number): Promise<void> {
     const sql = {
-      query: `UPDATE api_arv.schedules SET status = 'FINISHED' WHERE idusers = $1 AND idschedules = $2`,
-      values: [idusers, idschedules],
+      query: `UPDATE api_arv.schedules SET status = $1 WHERE idusers = $2 AND idschedules = $3`,
+      values: [ScheduleStatus.FINISHED, idusers, idschedules],
     };
     await this.database.query(sql.query, sql.values);
   }
@@ -192,11 +227,28 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     idclients: number,
   ): Promise<ScheduleDTO[]> {
     const sql = {
-      query: `SELECT * FROM api_arv.schedules WHERE idusers = $1 AND status = $2 AND idclients = $3`,
+      query: `SELECT
+                s.idschedules,
+                s.idclients,
+                s.client_name,
+                c.name,
+                c.phone,
+                s.description,
+                s.time,
+                s.date,
+                s.pacote,
+                s.atendence_count,
+                s.total_atendence_count,
+                s.status,
+                s.created_at
+              FROM api_arv.schedules s
+              LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
+              WHERE s.idusers = $1 AND s.status = $2 AND s.idclients = $3
+              ORDER BY s.idschedules`,
       values: [idusers, ScheduleStatus.FINISHED, idclients],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows;
+    return this.normalizePayload(rows);
   }
 
   private normalizePayload(params: any[]): ScheduleDTO[] {
