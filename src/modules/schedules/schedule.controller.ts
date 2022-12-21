@@ -118,7 +118,7 @@ export class ScheduleController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('finish')
   async finish(@Req() req: RequestType): Promise<void> {
     return handleController(async () => {
       const idusers = req.user.idusers;
