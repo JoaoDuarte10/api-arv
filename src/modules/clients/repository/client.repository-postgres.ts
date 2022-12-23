@@ -86,16 +86,17 @@ export class ClientRepositoryPostgres {
 
   async update(params: ClientDto): Promise<void> {
     const sql = {
-      text: 'UPDATE api_arv.clients SET name = $1, email = $2, phone = $3, idsegments = $4, address = $5, address_number = $6, note = $7 WHERE idclients = $8 AND idusers = $9;',
+      text: 'UPDATE api_arv.clients SET name = $1, email = $2, phone = $3, idsegments = $4, address = $5, address_number = $6, note = $7, updated_at = $8 WHERE idclients = $9 AND idusers = $10;',
       values: [
         params.name,
         params.email,
         params.phone,
         params.idsegment,
-        params.idclients,
         params.address,
         params.addressNumber,
         params.note,
+        new Date(),
+        params.idclients,
         params.idusers,
       ],
     };
@@ -104,8 +105,8 @@ export class ClientRepositoryPostgres {
 
   async delete(idusers: number, idclients: number): Promise<void> {
     await this.database.query(
-      'UPDATE api_arv.clients SET deleted = $1 WHERE idusers = $2 AND idclients = $3;',
-      [true, idusers, idclients],
+      'UPDATE api_arv.clients SET deleted = $1, updated_at = $2 WHERE idusers = $3 AND idclients = $4;',
+      [true, new Date(), idusers, idclients],
     );
   }
 }
