@@ -17,41 +17,35 @@ export class ClientRepositoryInMemory {
     return this.clients.filter((client) => client.idusers === idusers);
   }
 
-  async create({
-    idusers,
-    name,
-    email,
-    phone,
-    idsegments,
-  }: any): Promise<void> {
+  async create(params: ClientDto): Promise<void> {
     this.clients.push({
       idclients: this.clients.length + 1,
-      idusers,
-      name,
-      email,
-      phone,
-      idsegment: idsegments,
+      idusers: params.idusers,
+      name: params.name,
+      email: params.email,
+      phone: params.phone,
+      idsegment: params.idsegment,
+      address: params.address,
+      addressNumber: params.addressNumber,
+      note: params.note,
       created_at: new Date().toISOString(),
       updated_at: null,
     });
   }
 
-  async update({
-    idusers,
-    idclients,
-    name,
-    email,
-    phone,
-    idsegments,
-  }: any): Promise<void> {
+  async update(params: ClientDto): Promise<void> {
     const client = this.clients.find(
-      (item) => item.idusers === idusers && item.idclients === idclients,
+      (item) =>
+        item.idusers === params.idusers && item.idclients === params.idclients,
     );
 
-    client.name = name;
-    client.email = email;
-    client.phone = phone;
-    client.idsegment = idsegments;
+    client.name = params.name;
+    client.email = params.email;
+    client.phone = params.phone;
+    client.idsegment = params.idsegment;
+    client.address = params.address;
+    client.addressNumber = params.addressNumber;
+    client.note = params.note;
   }
 
   async delete(idusers: number, idclients: number): Promise<void> {

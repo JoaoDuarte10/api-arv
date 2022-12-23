@@ -29,6 +29,18 @@ export class ClientDto {
 
   @ApiProperty()
   @IsOptional()
+  address: string;
+
+  @ApiProperty()
+  @IsOptional()
+  addressNumber: number;
+
+  @ApiProperty()
+  @IsOptional()
+  note: string;
+
+  @ApiProperty()
+  @IsOptional()
   created_at?: string;
 
   @ApiProperty()

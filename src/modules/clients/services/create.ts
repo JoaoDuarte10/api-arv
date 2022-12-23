@@ -15,12 +15,6 @@ export class CreateClientService {
     );
     if (clientAlreadExists.length)
       throw new ClientAlreadyExistsException('Client alread exists');
-    await this.repository.create({
-      idusers: client.idusers,
-      name: client.name,
-      email: client.email,
-      phone: client.phone,
-      idsegments: client.idsegment,
-    });
+    await this.repository.create(client);
   }
 }

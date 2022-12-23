@@ -13,16 +13,19 @@ export class CreateClientController {
   @Post()
   async handle(
     @Req() req: RequestType,
-    @Body() clientDto: ClientDto,
+    @Body() body: ClientDto,
   ): Promise<void> {
     return handleController(async () => {
       const payload = {
         idusers: req.user.idusers,
-        idclients: clientDto.idclients,
-        name: clientDto.name,
-        email: clientDto.email,
-        phone: clientDto.phone,
-        idsegment: clientDto.idsegment,
+        idclients: body.idclients,
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        idsegment: body.idsegment,
+        address: body.address,
+        addressNumber: body.addressNumber,
+        note: body.note,
       };
       await this.service.execute(payload);
     });

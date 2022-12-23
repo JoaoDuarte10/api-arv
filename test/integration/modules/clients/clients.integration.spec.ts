@@ -22,6 +22,9 @@ describe('Client Integration', () => {
       email: 'any@mail.com',
       phone: '(99) 9 9999-9999',
       idsegment: null,
+      address: 'Rua logo ali',
+      addressNumber: 999,
+      note: null,
       created_at: new Date().toISOString(),
       updated_at: null,
     };
