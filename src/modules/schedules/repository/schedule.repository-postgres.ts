@@ -53,8 +53,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
                 pacote = $7,
                 atendence_count = $8,
                 total_atendence_count = $9,
-                status = $10
-              WHERE idusers = $11 AND idschedules = $12;`,
+                status = $10,
+                updated_at = $11
+              WHERE idusers = $12 AND idschedules = $13;`,
       values: [
         params.idusers,
         params.idclients,
@@ -66,6 +67,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
         params.atendenceCount,
         params.totalAtendenceCount,
         params.status,
+        new Date(),
         params.idusers,
         params.idschedules,
       ],
@@ -91,7 +93,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
                 s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE idusers = $1 AND time = $2  AND status = $3
+              WHERE s.idusers = $1 AND s.time = $2  AND s.status = $3
               ORDER BY s.idschedules;`,
       values: [idusers, time, ScheduleStatus.PENDING],
     };
@@ -216,8 +218,8 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
 
   async finish(idusers: number, idschedules: number): Promise<void> {
     const sql = {
-      query: `UPDATE api_arv.schedules SET status = $1 WHERE idusers = $2 AND idschedules = $3`,
-      values: [ScheduleStatus.FINISHED, idusers, idschedules],
+      query: `UPDATE api_arv.schedules SET status = $1, updated_at = $2 WHERE idusers = $3 AND idschedules = $4`,
+      values: [ScheduleStatus.FINISHED, new Date(), idusers, idschedules],
     };
     await this.database.query(sql.query, sql.values);
   }
