@@ -39,7 +39,7 @@ export class UserRepository {
     return rows;
   }
 
-  async findOne(username: string) {
+  async findOne(username: string): Promise<UserDto> {
     const sql = {
       query: 'SELECT * FROM api_arv.users WHERE name = $1',
       values: [username],
