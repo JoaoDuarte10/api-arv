@@ -120,7 +120,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
               WHERE s.idusers = $1 AND s.date = $2 AND status = $3
-              ORDER BY s.idschedules;`,
+              ORDER BY s.time;`,
       values: [idusers, date, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -149,7 +149,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
               WHERE s.idusers = $1 AND s.idclients = $2 AND status = $3
-              ORDER BY s.idschedules;`,
+              ORDER BY s.date, s.time;`,
       values: [idusers, idclients, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -179,7 +179,11 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return this.normalizePayload(rows);
+    const schedules = this.normalizePayload(rows);
+    return schedules.map((schedule) => {
+      schedule['expired'] = true;
+      return schedule;
+    });
   }
 
   async delete(idusers: number, idschedules: number): Promise<void> {
@@ -209,7 +213,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
               WHERE s.idusers = $1 AND s.idschedules = $2
-              ORDER BY idschedules;`,
+              ORDER BY s.date, s.time`,
       values: [idusers, idschedules],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -224,10 +228,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     await this.database.query(sql.query, sql.values);
   }
 
-  async getAllFinished(
-    idusers: number,
-    idclients: number,
-  ): Promise<ScheduleDTO[]> {
+  async getAllFinished(idusers: number): Promise<ScheduleDTO[]> {
     const sql = {
       query: `SELECT
                 s.idschedules,
@@ -242,12 +243,13 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
                 s.atendence_count,
                 s.total_atendence_count,
                 s.status,
-                s.created_at
+                s.created_at,
+                s.updated_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.status = $2 AND s.idclients = $3
+              WHERE s.idusers = $1 AND s.status = $2
               ORDER BY s.idschedules`,
-      values: [idusers, ScheduleStatus.FINISHED, idclients],
+      values: [idusers, ScheduleStatus.FINISHED],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
     return this.normalizePayload(rows);
@@ -262,13 +264,14 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
         name: schedule.name,
         phone: schedule.phone,
         description: schedule.description,
-        time: schedule.time,
+        time: schedule.time.substring(0, 5),
         date: schedule.date,
         pacote: schedule.pacote,
         atendenceCount: schedule.atendence_count,
         totalAtendenceCount: schedule.total_atendence_count,
         status: schedule.status,
         createdAt: schedule.created_at,
+        updatedAt: schedule.updated_at,
       };
     });
   }

@@ -84,17 +84,18 @@ export class ScheduleService {
         `Schedule with id ${idschedules} not exists`,
       );
     }
+
+    scheduleExists.idusers = idusers;
+
     const schedule = ScheduleEntity.create(scheduleExists);
+
     if (schedule instanceof ScheduleEntity) {
       schedule.finish();
       await this.repository.update(schedule.getProps());
     }
   }
 
-  async getAllFinished(
-    idusers: number,
-    idclients: number,
-  ): Promise<ScheduleDTO[]> {
-    return await this.repository.getAllFinished(idusers, idclients);
+  async getAllFinished(idusers: number): Promise<ScheduleDTO[]> {
+    return await this.repository.getAllFinished(idusers);
   }
 }

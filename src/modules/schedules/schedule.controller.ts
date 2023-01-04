@@ -122,7 +122,7 @@ export class ScheduleController {
   async finish(@Req() req: RequestType): Promise<void> {
     return handleController(async () => {
       const idusers = req.user.idusers;
-      const idschedules = req.query.idschedules;
+      const idschedules = req.body.idschedules;
       if (!idschedules) {
         throw new InvalidParamsRequestException('Idschedules is invalid');
       }
@@ -135,11 +135,7 @@ export class ScheduleController {
   async getAllFinished(@Req() req: RequestType): Promise<ScheduleDTO[]> {
     return handleController(async () => {
       const idusers = req.user.idusers;
-      const idclients = req.query.idclients;
-      if (!idclients) {
-        throw new InvalidParamsRequestException('Idclients is invalid');
-      }
-      return await this.service.getAllFinished(idusers, idclients);
+      return await this.service.getAllFinished(idusers);
     });
   }
 }

@@ -2,10 +2,12 @@ import { UserRepository } from '../../../../../src/modules/users/repository/user
 import { UserDto } from '../../../../../src/modules/users/user-dto';
 import { AuthService } from '../../../../../src/modules/auth/services/auth.service';
 import { JwtService } from '@nestjs/jwt';
+import { RulesRepository } from '../../../../../src/modules/rules/repository/rules.repository';
 
 describe('AuthService', () => {
   let sut: AuthService;
   let userRepository: UserRepository;
+  let rulesRepository: RulesRepository;
   let jwtService: JwtService;
   let user: UserDto;
 
@@ -26,10 +28,14 @@ describe('AuthService', () => {
     } as any;
 
     jwtService = {
-      sign: () => '',
+      sign: () => user,
     } as any;
 
-    sut = new AuthService(userRepository, jwtService);
+    rulesRepository = {
+      findByUser: () => '',
+    } as any;
+
+    sut = new AuthService(userRepository, rulesRepository, jwtService);
   });
 
   it('should return user when credentials are valid', async () => {
@@ -48,8 +54,8 @@ describe('AuthService', () => {
     expect(obj.hasOwnProperty('password')).toBeFalsy();
   });
 
-  it('Should return access token', () => {
-    const result = sut.login(user);
+  it('Should return access token', async () => {
+    const result = await sut.login(user);
     expect(result.access_token).toBeDefined();
   });
 });

@@ -21,7 +21,10 @@ export class UpdateClientService {
       name: client.name,
       email: client.email,
       phone: client.phone,
-      idsegments: client.idsegment,
+      idsegment: client.idsegment,
+      address: client.address,
+      addressNumber: client.addressNumber,
+      note: client.note,
     });
   }
 }

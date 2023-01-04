@@ -77,6 +77,14 @@ export class SalesController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('pending')
+  async findPending(@Req() req: RequestType): Promise<SalesDTO[]> {
+    return handleController(async () => {
+      return await this.salesService.findPending(req.user.idusers);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete()
   async delete(@Req() req: RequestType): Promise<void> {
     return handleController(async () => {
@@ -92,11 +100,28 @@ export class SalesController {
   @Post('register-payment')
   async registerPayment(@Req() req: RequestType): Promise<void> {
     return handleController(async () => {
-      const idsales = Number(req.query.idsales);
+      const idsales = Number(req.body.idsales);
       if (!idsales) {
         throw new InvalidParamsRequestException('Idsales is invalid');
       }
       await this.salesService.registerPayment(req.user.idusers, idsales);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('reports')
+  async reports(@Req() req: RequestType): Promise<void> {
+    return handleController(async () => {
+      const date1 = req.query.date1;
+      const date2 = req.query.date2;
+      if (!date1 || !date2) {
+        throw new InvalidParamsRequestException('The range date is invalid');
+      }
+      return await this.salesService.findReports(
+        req.user.idusers,
+        date1,
+        date2,
+      );
     });
   }
 }

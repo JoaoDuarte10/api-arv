@@ -27,10 +27,12 @@ export class ScheduleEntity {
     if (!params.pacote && params.pacote !== false) {
       errors.push(new InvalidParamsEntityException('Pacote is invalid'));
     }
+    if (!params.status) {
+      params.status = ScheduleStatus.PENDING;
+    }
     if (
-      !params.status ||
-      (params.status !== ScheduleStatus.PENDING &&
-        params.status !== ScheduleStatus.FINISHED)
+      params.status !== ScheduleStatus.PENDING &&
+      params.status !== ScheduleStatus.FINISHED
     ) {
       errors.push(new InvalidParamsEntityException('Status is invalid'));
     }
@@ -43,6 +45,9 @@ export class ScheduleEntity {
       errors.push(
         new InvalidParamsEntityException('Total Atendence Count is invalid'),
       );
+    }
+    if (params.pacote && !params.atendenceCount) {
+      params.atendenceCount = 0;
     }
     if (errors.length > 0) {
       return new InvalidScheduleException(
@@ -74,7 +79,7 @@ export class ScheduleEntity {
   }
 
   private addAtendence(): void {
-    this.props.atendenceCount = this.props.atendenceCount + 1;
+    this.props.atendenceCount += 1;
   }
 
   private isPacote(): boolean {

@@ -20,7 +20,7 @@ export abstract class ClientRepository {
     name,
     email,
     phone,
-    idsegments,
+    idsegment,
   }: any): Promise<void>;
   abstract delete(idusers: number, idclients: number): Promise<void>;
 }

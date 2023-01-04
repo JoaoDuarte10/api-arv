@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SegmentController } from './rules.controller';
+import { SegmentController } from './segments.controller';
 import { SegmentService } from './segment.service';
 import { SegmentRepository } from './segment.repository';
 import { configProviders } from '../../providers/config-provider';

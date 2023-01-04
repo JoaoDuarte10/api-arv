@@ -19,7 +19,7 @@ export class SalesDTO {
 
   @ApiProperty()
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   idclients?: number;
 
   @ApiProperty()
@@ -44,8 +44,8 @@ export class SalesDTO {
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
-  paymentDate: string;
+  @IsOptional()
+  paymentDate: string | null;
 
   @ApiProperty()
   @IsString()

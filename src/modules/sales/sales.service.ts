@@ -45,6 +45,10 @@ export class SalesService {
     return await this.salesRepository.findByClient(idusers, idclients);
   }
 
+  async findPending(idusers: number): Promise<SalesDTO[]> {
+    return await this.salesRepository.findPending(idusers);
+  }
+
   async delete(idusers: number, idsales: number): Promise<void> {
     await this.salesRepository.delete(idusers, idsales);
   }
@@ -55,5 +59,38 @@ export class SalesService {
       throw new SalesNotExistsException('Sales not exists');
     }
     await this.salesRepository.registerPayment(idusers, idsales);
+  }
+
+  async findReports(
+    idusers: number,
+    date1: string,
+    date2: string,
+  ): Promise<any> {
+    const reports = {};
+    await Promise.all([
+      this.salesRepository.getBasicInfoReports(idusers, date1, date2),
+      this.salesRepository.getBiggestTotalWithRangeDate(idusers, date1, date2),
+      this.salesRepository.getLowestTotalWithRangeDate(idusers, date1, date2),
+    ]).then((result) => {
+      reports['basicInfos'] = {
+        total: Number(result[0].total),
+        quantity: Number(result[0].quantity),
+        average: Number(result[0].average),
+        countClients: Number(result[0].count_clients),
+        biggestValueSale: parseFloat(result[0].biggest_sale),
+        lowestValueSales: parseFloat(result[0].lowest_sale),
+      };
+      reports['biggestTotalWithDate'] = {
+        total: parseFloat(result[1].total),
+        countTotal: parseFloat(result[1].count_total),
+        date: result[1].date,
+      };
+      reports['lowestTotalWithDate'] = {
+        total: parseFloat(result[2].total),
+        countTotal: parseFloat(result[2].count_total),
+        date: result[2].date,
+      };
+    });
+    return reports;
   }
 }

@@ -72,15 +72,11 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
     schedule.status = ScheduleStatus.FINISHED;
   }
 
-  async getAllFinished(
-    idusers: number,
-    idclients: number,
-  ): Promise<ScheduleDTO[]> {
+  async getAllFinished(idusers: number): Promise<ScheduleDTO[]> {
     return this.schedules.filter(
       (schedule) =>
         schedule.idusers === idusers &&
-        schedule.status === ScheduleStatus.FINISHED &&
-        schedule.idclients === idclients,
+        schedule.status === ScheduleStatus.FINISHED,
     );
   }
 }

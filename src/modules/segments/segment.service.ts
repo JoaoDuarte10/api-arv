@@ -55,7 +55,7 @@ export class SegmentService {
       input.idsegments,
     );
 
-    if (alreadyClientInSegment) {
+    if (alreadyClientInSegment.length) {
       throw new SegmentNotEmptyException('Exists client this segment');
     }
 

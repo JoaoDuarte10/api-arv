@@ -18,7 +18,6 @@ export class CreateClientController {
     return handleController(async () => {
       const payload = {
         idusers: req.user.idusers,
-        idclients: body.idclients,
         name: body.name,
         email: body.email,
         phone: body.phone,

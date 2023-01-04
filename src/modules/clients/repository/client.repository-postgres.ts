@@ -27,7 +27,8 @@ export class ClientRepositoryPostgres {
                 c.updated_at
               FROM api_arv.clients c 
                 LEFT JOIN api_arv.segments s ON c.idsegments = s.idsegments
-              WHERE c.idusers = $1 AND c.${field} = $2 AND deleted = false;`,
+              WHERE c.idusers = $1 AND c.${field} = $2 AND deleted = false
+              ORDER BY c.name;`,
       values: [idusers, value],
     };
     const { rows } = await this.database.query(sql.text, sql.values);
@@ -49,7 +50,8 @@ export class ClientRepositoryPostgres {
                 c.updated_at
               FROM api_arv.clients c 
                 LEFT JOIN api_arv.segments s ON c.idsegments = s.idsegments
-              WHERE c.idusers = $1 AND deleted = false;`,
+              WHERE c.idusers = $1 AND deleted = false
+              ORDER BY c.name;`,
       values: [idusers],
     };
     const { rows } = await this.database.query(sql.text, sql.values);
