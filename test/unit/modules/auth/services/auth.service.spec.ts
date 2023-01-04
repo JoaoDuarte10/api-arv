@@ -32,7 +32,7 @@ describe('AuthService', () => {
     } as any;
 
     rulesRepository = {
-      findByUser: () => '',
+      findByUser: () => [{ idrules: 1, name: 'any_rule' }],
     } as any;
 
     sut = new AuthService(userRepository, rulesRepository, jwtService);
