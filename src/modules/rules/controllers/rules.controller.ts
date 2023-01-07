@@ -51,13 +51,14 @@ export class RulesController {
   @UseGuards(JwtAuthGuard)
   @Get('user')
   async findByUser(@Req() req: RequestType) {
-    return await this.rulesService.findByUser(req.user.idusers);
+    const idusers = req.query.idusers;
+    return await this.rulesService.findByUser(idusers);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('user')
   async createWithUser(@Req() req: RequestType, @Body() body: any) {
-    await this.rulesService.createWithUser(req.user.idusers, body.idrules);
+    await this.rulesService.createWithUser(req.body.idusers, body.idrules);
   }
 
   @UseGuards(JwtAuthGuard)

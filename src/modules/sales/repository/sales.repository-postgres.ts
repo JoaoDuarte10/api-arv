@@ -48,7 +48,8 @@ export class SalesRepository {
                 s.created_at
               FROM api_arv.sales s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.date = $2`,
+              WHERE s.idusers = $1 AND s.date = $2
+              ORDER BY s.date DESC;`,
       values: [idusers, date],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -73,7 +74,8 @@ export class SalesRepository {
               s.created_at
             FROM api_arv.sales s
             LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-            WHERE s.idusers = $1 AND s.date BETWEEN $2 AND $3`,
+            WHERE s.idusers = $1 AND s.date BETWEEN $2 AND $3
+            ORDER BY s.date DESC;`,
       values: [idusers, date1, date2],
     };
 
@@ -95,7 +97,8 @@ export class SalesRepository {
                 s.created_at
               FROM api_arv.sales s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.idclients = $2`,
+              WHERE s.idusers = $1 AND s.idclients = $2
+              ORDER BY s.date DESC;`,
       values: [idusers, idclients],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -116,7 +119,8 @@ export class SalesRepository {
                 s.created_at
               FROM api_arv.sales s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.payment_status = 'PENDING'`,
+              WHERE s.idusers = $1 AND s.payment_status = 'PENDING'
+              ORDER BY s.date DESC;`,
       values: [idusers],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -137,7 +141,8 @@ export class SalesRepository {
                 s.created_at
               FROM api_arv.sales s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.idsales = $2`,
+              WHERE s.idusers = $1 AND s.idsales = $2
+              ORDER BY s.date DESC;`,
       values: [idusers, idsales],
     };
     const { rows } = await this.database.query(sql.query, sql.values);

@@ -9,7 +9,8 @@ export class RulesService {
   constructor(private readonly rulesRepository: RulesRepository) {}
 
   async create(rule: { name: string; description: string }): Promise<void> {
-    const existsRule = this.rulesRepository.findRuleByName(rule.name);
+    const existsRule = await this.rulesRepository.findRuleByName(rule.name);
+    console.log(rule, existsRule);
     if (existsRule) {
       throw new RuleAlreadyExists('This rule already exists');
     }
@@ -17,7 +18,7 @@ export class RulesService {
   }
 
   async disable(idrules: number): Promise<void> {
-    const existsRule = this.rulesRepository.findRuleById(idrules);
+    const existsRule = await this.rulesRepository.findRuleById(idrules);
     if (!existsRule) {
       throw new RuleNotExists('This rule not exists');
     }
@@ -25,7 +26,7 @@ export class RulesService {
   }
 
   async enable(idrules: number): Promise<void> {
-    const existsRule = this.rulesRepository.findRuleById(idrules);
+    const existsRule = await this.rulesRepository.findRuleById(idrules);
     if (!existsRule) {
       throw new RuleNotExists('This rule not exists');
     }
@@ -41,7 +42,7 @@ export class RulesService {
   }
 
   async createWithUser(idusers: number, idrules: number) {
-    const existsRule = this.rulesRepository.findRuleById(idrules);
+    const existsRule = await this.rulesRepository.findRuleById(idrules);
     if (!existsRule) {
       throw new RuleNotExists('This rule not exists');
     }

@@ -38,7 +38,7 @@ export class RulesRepositoryPostgres implements RulesRepository {
     await this.database.query(sql.query, sql.values);
   }
 
-  async findRuleById(idrules: number): Promise<any> {
+  async findRuleById(idrules: number): Promise<RulesDTO> {
     const sql = {
       query:
         'SELECT * FROM api_arv.rules WHERE idrules = $1 AND has_active = true',
@@ -48,7 +48,7 @@ export class RulesRepositoryPostgres implements RulesRepository {
     return rows[0];
   }
 
-  async findRuleByName(name: string): Promise<any> {
+  async findRuleByName(name: string): Promise<RulesDTO> {
     const sql = {
       query:
         'SELECT * FROM api_arv.rules WHERE name = $1 AND has_active = true',
@@ -58,22 +58,22 @@ export class RulesRepositoryPostgres implements RulesRepository {
     return rows[0];
   }
 
-  async findAll(): Promise<any> {
+  async findAll(): Promise<RulesDTO[]> {
     const { rows } = await this.database.query(
       'SELECT * FROM api_arv.rules WHERE has_active = true',
     );
     return rows;
   }
 
-  async findByUser(idusers: number): Promise<any> {
+  async findByUser(idusers: number): Promise<RulesDTO[]> {
     const sql = {
       query: `SELECT
-                cr.idclients_rules,
+                cr.iduser_rules,
                 r.idrules,
                 r."name",
                 r.description,
                 cr.created_at
-              FROM api_arv.clients_rules cr
+              FROM api_arv.user_rules cr
               INNER JOIN api_arv.rules r ON cr.idrules = r.idrules
               WHERE cr.idusers = $1 AND r.has_active = true;
             `,
@@ -86,7 +86,7 @@ export class RulesRepositoryPostgres implements RulesRepository {
   async findRuleByUser(idusers: number, idrules: number): Promise<boolean> {
     const sql = {
       query:
-        'SELECT * FROM api_arv.clients_rules WHERE idusers = $1 AND idrules = $2',
+        'SELECT * FROM api_arv.user_rules WHERE idusers = $1 AND idrules = $2',
       values: [idusers, idrules],
     };
 
@@ -96,7 +96,7 @@ export class RulesRepositoryPostgres implements RulesRepository {
 
   async createWithUser(idusers: number, idrules: number): Promise<void> {
     const sql = {
-      query: `INSERT INTO api_arv.clients_rules (
+      query: `INSERT INTO api_arv.user_rules (
                 idrules,
                 idusers
               ) VALUES (
@@ -109,7 +109,7 @@ export class RulesRepositoryPostgres implements RulesRepository {
 
   async removeRuleWithUser(idusers: number, idrules: number): Promise<void> {
     const sql = {
-      query: `DELETE FROM api_arv.clients_rules WHERE idusers = $1 AND idrules = $2`,
+      query: `DELETE FROM api_arv.user_rules WHERE idusers = $1 AND idrules = $2`,
       values: [idusers, idrules],
     };
     await this.database.query(sql.query, sql.values);

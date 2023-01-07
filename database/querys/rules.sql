@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS api_arv.rules (
     updated_at TIMESTAMP NULL
 );
 
-CREATE TABLE IF NOT EXISTS api_arv.clients_rules (
-    idclients_rules SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS api_arv.user_rules (
+    iduser_rules SERIAL PRIMARY KEY,
     idrules INT,
     idusers INT,
     created_at TIMESTAMP DEFAULT NOW(),

@@ -34,4 +34,9 @@ export class RulesDTO {
   @IsString()
   @IsOptional()
   created_at: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  updated_at: string;
 }
