@@ -85,6 +85,21 @@ export class SalesController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('pending/client')
+  async findPendingByClient(@Req() req: RequestType): Promise<SalesDTO[]> {
+    return handleController(async () => {
+      const idclients = req.query.idclients;
+      if (!idclients) {
+        throw new InvalidParamsRequestException('Idclient is invalid');
+      }
+      return await this.salesService.findPendingByClient(
+        req.user.idusers,
+        idclients,
+      );
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete()
   async delete(@Req() req: RequestType): Promise<void> {
     return handleController(async () => {

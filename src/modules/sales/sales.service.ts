@@ -49,6 +49,13 @@ export class SalesService {
     return await this.salesRepository.findPending(idusers);
   }
 
+  async findPendingByClient(
+    idusers: number,
+    idclients: number,
+  ): Promise<SalesDTO[]> {
+    return await this.salesRepository.findPendingByClient(idusers, idclients);
+  }
+
   async delete(idusers: number, idsales: number): Promise<void> {
     await this.salesRepository.delete(idusers, idsales);
   }

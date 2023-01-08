@@ -127,6 +127,31 @@ export class SalesRepository {
     return rows;
   }
 
+  async findPendingByClient(
+    idusers: number,
+    idclients: number,
+  ): Promise<SalesDTO[]> {
+    const sql = {
+      query: `SELECT
+                s.idsales,
+                c.name AS client,
+                s.idclients,
+                s.description,
+                s.date,
+                s.total,
+                s.payment_status,
+                s.payment_date,
+                s.created_at
+              FROM api_arv.sales s
+              LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
+              WHERE s.idusers = $1 AND s.payment_status = 'PENDING' AND s.idclients = $2
+              ORDER BY s.date DESC;`,
+      values: [idusers, idclients],
+    };
+    const { rows } = await this.database.query(sql.query, sql.values);
+    return rows;
+  }
+
   async findOne(idusers: number, idsales: number): Promise<SalesDTO> {
     const sql = {
       query: `SELECT
