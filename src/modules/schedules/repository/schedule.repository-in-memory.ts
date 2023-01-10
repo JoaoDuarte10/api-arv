@@ -79,4 +79,15 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
         schedule.status === ScheduleStatus.FINISHED,
     );
   }
+
+  async getMostRecentFrom(
+    idusers: number,
+    fromDate: string,
+  ): Promise<ScheduleDTO[]> {
+    return this.schedules.filter(
+      (schedule) =>
+        schedule.idusers === idusers &&
+        schedule.status === ScheduleStatus.FINISHED,
+    );
+  }
 }

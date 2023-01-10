@@ -248,8 +248,38 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
               WHERE s.idusers = $1 AND s.status = $2
-              ORDER BY s.idschedules`,
+              ORDER BY s.updated_at`,
       values: [idusers, ScheduleStatus.FINISHED],
+    };
+    const { rows } = await this.database.query(sql.query, sql.values);
+    return this.normalizePayload(rows);
+  }
+
+  async getMostRecentFrom(
+    idusers: number,
+    fromDate: string,
+  ): Promise<ScheduleDTO[]> {
+    const sql = {
+      query: `SELECT
+                s.idschedules,
+                s.idclients,
+                s.client_name,
+                c.name,
+                c.phone,
+                s.description,
+                s.time,
+                s.date,
+                s.pacote,
+                s.atendence_count,
+                s.total_atendence_count,
+                s.status,
+                s.created_at,
+                s.updated_at
+              FROM api_arv.schedules s
+              LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
+              WHERE s.idusers = $1 AND s.status = $2 AND s.updated_at >= $3
+              ORDER BY s.updated_at DESC;`,
+      values: [idusers, ScheduleStatus.FINISHED, fromDate],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
     return this.normalizePayload(rows);

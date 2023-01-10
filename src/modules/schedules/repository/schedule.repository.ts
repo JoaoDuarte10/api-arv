@@ -14,4 +14,8 @@ export abstract class ScheduleRepository {
   abstract findOne(idusers: number, idschedules: number): Promise<ScheduleDTO>;
   abstract finish(idusers: number, idschedules: number): Promise<void>;
   abstract getAllFinished(idusers: number): Promise<ScheduleDTO[]>;
+  abstract getMostRecentFrom(
+    idusers: number,
+    fromDate: string,
+  ): Promise<ScheduleDTO[]>;
 }

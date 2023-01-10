@@ -138,4 +138,17 @@ export class ScheduleController {
       return await this.service.getAllFinished(idusers);
     });
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('finished/from-date')
+  async getMostRecentFrom(@Req() req: RequestType): Promise<ScheduleDTO[]> {
+    return handleController(async () => {
+      const idusers = req.user.idusers;
+      const fromDate = req.query.fromDate;
+      if (!fromDate) {
+        throw new InvalidParamsRequestException('From date is invalid');
+      }
+      return await this.service.getMostRecentFrom(idusers, fromDate);
+    });
+  }
 }

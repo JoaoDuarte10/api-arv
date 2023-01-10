@@ -98,4 +98,11 @@ export class ScheduleService {
   async getAllFinished(idusers: number): Promise<ScheduleDTO[]> {
     return await this.repository.getAllFinished(idusers);
   }
+
+  async getMostRecentFrom(
+    idusers: number,
+    fromDate: string,
+  ): Promise<ScheduleDTO[]> {
+    return await this.repository.getMostRecentFrom(idusers, fromDate);
+  }
 }
