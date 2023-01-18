@@ -19,9 +19,16 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
     this.schedules.push(params);
   }
 
-  async findByTime(idusers: number, time: string): Promise<ScheduleDTO> {
+  async findByTimeAndDate(
+    idusers: number,
+    time: string,
+    date: string,
+  ): Promise<ScheduleDTO> {
     return this.schedules.find(
-      (schedule) => schedule.idusers === idusers && schedule.time === time,
+      (schedule) =>
+        schedule.idusers === idusers &&
+        schedule.time === time &&
+        schedule.date === date,
     );
   }
 

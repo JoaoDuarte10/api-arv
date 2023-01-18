@@ -10,7 +10,6 @@ export class RulesService {
 
   async create(rule: { name: string; description: string }): Promise<void> {
     const existsRule = await this.rulesRepository.findRuleByName(rule.name);
-    console.log(rule, existsRule);
     if (existsRule) {
       throw new RuleAlreadyExists('This rule already exists');
     }

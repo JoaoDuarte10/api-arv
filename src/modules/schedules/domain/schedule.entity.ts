@@ -62,6 +62,10 @@ export class ScheduleEntity {
     return this.props.time;
   }
 
+  getDate(): string {
+    return this.props.date;
+  }
+
   getProps(): ScheduleDTO {
     return this.props;
   }

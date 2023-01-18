@@ -1,0 +1,11 @@
+node_modules/
+.husky
+.scannerwork
+coverage
+database
+dist
+logs
+test
+.eslintrc
+.prettierrc
+jest.config.ts

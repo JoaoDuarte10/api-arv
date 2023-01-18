@@ -75,7 +75,11 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     await this.database.query(sql.query, sql.values);
   }
 
-  async findByTime(idusers: number, time: string): Promise<ScheduleDTO> {
+  async findByTimeAndDate(
+    idusers: number,
+    time: string,
+    date: string,
+  ): Promise<ScheduleDTO> {
     const sql = {
       query: `SELECT
                 s.idschedules,
@@ -93,9 +97,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
                 s.created_at
               FROM api_arv.schedules s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
-              WHERE s.idusers = $1 AND s.time = $2  AND s.status = $3
+              WHERE s.idusers = $1 AND s.time = $2 AND s.date = $3 AND s.status = $4
               ORDER BY s.idschedules;`,
-      values: [idusers, time, ScheduleStatus.PENDING],
+      values: [idusers, time, date, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
     return this.normalizePayload(rows)[0];

@@ -19,9 +19,10 @@ export class ScheduleService {
         schedule.getDetails(),
       );
     }
-    const scheduleAlreadyExists = await this.repository.findByTime(
+    const scheduleAlreadyExists = await this.repository.findByTimeAndDate(
       params.idusers,
       schedule.getTime(),
+      schedule.getDate(),
     );
 
     if (scheduleAlreadyExists) {

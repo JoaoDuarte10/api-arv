@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Running Tests') {
             steps {
-                sh 'npm run test:cov'
+                sh 'npm run test:coverage'
             }
         }
     }

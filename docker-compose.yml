@@ -1,13 +1,49 @@
 version: '3'
 
 services:
-  api-arv:
+  api-arvs:
     container_name: api-arv
-    build: .
+    image: joaoduarte10/api-arv:latest
     restart: always
-    ports:
-      - 5000:5000
-    volumes:
-      - .:usr/app/arv
+    expose:
+      - 3000
+    # volumes:
+    #   - .:usr/app/arv
     env_file:
       - .env
+    networks:
+      - arv
+
+networks:
+  arv:
+    external: true
+  # api-arv:
+  #   image: joaoduarte10/api-arv:latest
+  #   container_name: api-arv
+  #   expose:
+  #     - 3000
+  #   environment:
+  #     SETTINGS_RELOAD_TIME: ${SETTINGS_RELOAD_TIME}
+  #     PORT: ${PORT}
+  #     CONSOLE_LOG_ENABLE: ${CONSOLE_LOG_ENABLE}
+  #     PGUSER: ${PGUSER}
+  #     PGHOST: ${PGHOST}
+  #     PGPASSWORD: ${PGPASSWORD}
+  #     PGDATABASE: ${PGDATABASE}
+  #     PGPORT: ${PGPORT}
+  #     JWT_SECRETS: ${JWT_SECRETS}
+  #     JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+  # nginx:
+  #   build:
+  #     context: nginx/
+  #   container_name: nginx
+  #   restart: always
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - ./conf/default.conf:/etc/nginx/conf.d/default.conf
+  #     - ./letsencrypt:/etc/letsencrypt
+  #     - ../front/build:/usr/share/nginx/html
+  #   depends_on:
+  #     - api-arv
