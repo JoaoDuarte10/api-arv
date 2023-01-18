@@ -25,4 +25,9 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            archiveArtifacts artifacts: 'coverage/', followSymlinks: false
+        }
+    }
 }
