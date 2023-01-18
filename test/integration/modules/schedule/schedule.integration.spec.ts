@@ -34,6 +34,7 @@ describe('ScheduleIntegration', () => {
 
     request = {
       user: { idusers: 1 },
+      body: {},
       query: {},
     };
   });
@@ -164,11 +165,9 @@ describe('ScheduleIntegration', () => {
   describe('FindAllExpireds', () => {
     it('Should return all schedules expireds', async () => {
       const date = new Date();
-      const dateExpired = `${date.getFullYear()}-${date.getMonth()}-${
-        date.getDate() - 1
-      }`;
+      date.setDate(date.getDate() - 1);
       payload.idusers = request.user.idusers;
-      payload.date = dateExpired;
+      payload.date = date.toString();
       await repository.create(payload);
       const result = await sut.findAllExpireds(request);
       expect(result.length).toBe(1);
@@ -209,14 +208,14 @@ describe('ScheduleIntegration', () => {
     });
 
     it('Should finish schedule', async () => {
-      request.query['idschedules'] = payload.idschedules;
+      request.body['idschedules'] = payload.idschedules;
       await sut.finish(request);
       expect(repository.schedules[0].status).toBe(ScheduleStatus.FINISHED);
     });
 
     it('Should return status code 404 when schedule not exists', async () => {
       try {
-        request.query['idschedules'] = Math.random();
+        request.body = { idschedules: Math.random() };
         await sut.finish(request);
         expect(true).toBe(false);
       } catch (error) {
@@ -239,7 +238,7 @@ describe('ScheduleIntegration', () => {
       payload.pacote = true;
       payload.totalAtendenceCount = 2;
       await sut.create(request, payload);
-      request.query['idschedules'] = payload.idschedules;
+      request.body['idschedules'] = payload.idschedules;
 
       await sut.finish(request);
 
@@ -254,7 +253,7 @@ describe('ScheduleIntegration', () => {
       payload.totalAtendenceCount = 2;
 
       await sut.create(request, payload);
-      request.query['idschedules'] = payload.idschedules;
+      request.body['idschedules'] = payload.idschedules;
 
       await sut.finish(request);
       await sut.finish(request);
@@ -266,23 +265,13 @@ describe('ScheduleIntegration', () => {
   describe('GetAllFinished', () => {
     beforeEach(async () => {
       await sut.create(request, payload);
-      request.query['idschedules'] = payload.idschedules;
+      request.body['idschedules'] = payload.idschedules;
       await sut.finish(request);
     });
 
     it('Should return schedules finisehds', async () => {
-      request.query['idclients'] = payload.idclients;
       const result = await sut.getAllFinished(request);
       expect(result[0].status).toBe(ScheduleStatus.FINISHED);
-    });
-
-    it('Should return status code 400 when idclients is not provided', async () => {
-      try {
-        await sut.getAllFinished(request);
-        expect(true).toBe(false);
-      } catch (error) {
-        expect(error.status).toBe(400);
-      }
     });
   });
 });
