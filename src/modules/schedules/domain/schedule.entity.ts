@@ -12,9 +12,6 @@ export class ScheduleEntity {
     if (!params.idusers) {
       errors.push(new InvalidParamsEntityException('Idusers is invalid'));
     }
-    if (!params.idclients) {
-      errors.push(new InvalidParamsEntityException('Idclients is invalid'));
-    }
     if (!params.description) {
       errors.push(new InvalidParamsEntityException('Description is invalid'));
     }

@@ -3,7 +3,7 @@ CREATE TYPE schedule_status AS ENUM('PENDING', 'FINISHED')
 CREATE TABLE IF NOT EXISTS api_arv.schedules (
     idschedules serial PRIMARY KEY,
     idusers int NOT NULL,
-    idclients int NOT NULL,
+    idclients int NULL,
     client_name VARCHAR(100) NULL,
     description VARCHAR(256) NOT NULL,
     time time NOT NULL,
