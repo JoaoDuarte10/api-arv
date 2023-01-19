@@ -75,6 +75,16 @@ describe('ScheduleIntegration', () => {
       }
       expect(repository.schedules.length).toBe(0);
     });
+
+    it('Should create schedule when idclients is null', async () => {
+      delete payload.idclients;
+      payload.clientName = 'Any Name';
+
+      await sut.create(request, payload);
+
+      expect(repository.schedules.length).toBe(1);
+      console.log(repository.schedules);
+    });
   });
 
   describe('Update', () => {
