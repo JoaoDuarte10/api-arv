@@ -156,7 +156,7 @@ describe('ScheduleIntegration', () => {
       await sut.create(request, payload);
       request.query['idclients'] = payload.idclients;
 
-      const result = await sut.findByClient(request);
+      const result = await sut.findByIdClient(request);
 
       expect(result.length).toBeGreaterThanOrEqual(1);
     });
@@ -164,8 +164,30 @@ describe('ScheduleIntegration', () => {
     it('Should return status code 400 when idclients is not provided', async () => {
       await sut.create(request, payload);
       try {
-        await sut.findByClient(request);
+        await sut.findByIdClient(request);
         expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
+  });
+
+  describe('Find by client name', () => {
+    it('Should return schedule by client name, not idclient', async () => {
+      const clientName = 'any client';
+      payload.clientName = clientName;
+      request.query['clientName'] = clientName;
+      await sut.create(request, payload);
+
+      const result = await sut.findByClientName(request);
+
+      expect(result.length).toBe(1);
+    });
+
+    it('Should return status code 400 when client name is not provided', async () => {
+      request.query['clientName'] = null;
+      try {
+        await sut.findByClientName(request);
       } catch (error) {
         expect(error.status).toBe(400);
       }
