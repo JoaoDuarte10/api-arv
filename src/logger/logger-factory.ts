@@ -27,6 +27,7 @@ export function loggerFactory(appConfig: AppConfig): Logger {
         filename: 'logs/app.log',
       }),
     ],
+    format: winston.format.json(),
   });
 
   if (appConfig.consoleLogEnable) {
