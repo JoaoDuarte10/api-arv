@@ -38,13 +38,23 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
     );
   }
 
-  async findByClient(
+  async findByIdClient(
     idusers: number,
     idclients: number,
   ): Promise<ScheduleDTO[]> {
     return this.schedules.filter(
       (schedule) =>
         schedule.idusers === idusers && schedule.idclients === idclients,
+    );
+  }
+
+  async findByClientName(
+    idusers: number,
+    clientName: string,
+  ): Promise<ScheduleDTO[]> {
+    return this.schedules.filter(
+      (schedule) =>
+        schedule.idusers === idusers && schedule.clientName === clientName,
     );
   }
 

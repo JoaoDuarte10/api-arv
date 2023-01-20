@@ -9,9 +9,13 @@ export abstract class ScheduleRepository {
     date: string,
   ): Promise<ScheduleDTO>;
   abstract findByDate(idusers: number, date: string): Promise<ScheduleDTO[]>;
-  abstract findByClient(
+  abstract findByIdClient(
     idusers: number,
     idclients: number,
+  ): Promise<ScheduleDTO[]>;
+  abstract findByClientName(
+    idusers: number,
+    clientName: string,
   ): Promise<ScheduleDTO[]>;
   abstract findAllExpireds(idusers: number): Promise<ScheduleDTO[]>;
   abstract delete(idusers: number, idschedules: number): Promise<void>;

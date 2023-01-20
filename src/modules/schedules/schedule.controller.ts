@@ -84,14 +84,27 @@ export class ScheduleController {
 
   @UseGuards(JwtAuthGuard)
   @Get('client')
-  async findByClient(@Req() req: RequestType): Promise<ScheduleDTO[]> {
+  async findByIdClient(@Req() req: RequestType): Promise<ScheduleDTO[]> {
     return handleController(async () => {
       const idusers = req.user.idusers;
       const idclients = req.query.idclients;
       if (!idclients) {
         throw new InvalidParamsRequestException('Idclients is invalid');
       }
-      return await this.service.findByClient(idusers, idclients);
+      return await this.service.findByIdClient(idusers, idclients);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('client/name')
+  async findByClientName(@Req() req: RequestType): Promise<ScheduleDTO[]> {
+    return handleController(async () => {
+      const idusers = req.user.idusers;
+      const clientName = req.query.clientName;
+      if (!clientName) {
+        throw new InvalidParamsRequestException('Client name is invalid');
+      }
+      return await this.service.findByClientName(idusers, clientName);
     });
   }
 

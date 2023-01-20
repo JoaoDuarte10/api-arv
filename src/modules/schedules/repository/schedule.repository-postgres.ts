@@ -131,7 +131,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     return this.normalizePayload(rows);
   }
 
-  async findByClient(
+  async findByIdClient(
     idusers: number,
     idclients: number,
   ): Promise<ScheduleDTO[]> {
@@ -155,6 +155,32 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               WHERE s.idusers = $1 AND s.idclients = $2 AND status = $3
               ORDER BY s.date, s.time;`,
       values: [idusers, idclients, ScheduleStatus.PENDING],
+    };
+    const { rows } = await this.database.query(sql.query, sql.values);
+    return this.normalizePayload(rows);
+  }
+
+  async findByClientName(
+    idusers: number,
+    clientName: string,
+  ): Promise<ScheduleDTO[]> {
+    const sql = {
+      query: `SELECT
+                s.idschedules,
+                s.idclients,
+                s.client_name,
+                s.description,
+                s.time,
+                s.date,
+                s.pacote,
+                s.atendence_count,
+                s.total_atendence_count,
+                s.status,
+                s.created_at
+              FROM api_arv.schedules s
+              WHERE s.idusers = $1 AND s.client_name = $2 AND status = $3
+              ORDER BY s.date, s.time;`,
+      values: [idusers, clientName, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
     return this.normalizePayload(rows);
