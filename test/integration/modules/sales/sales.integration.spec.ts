@@ -1,14 +1,14 @@
 import { SalesController } from '../../../../src/modules/sales/sales.controller';
 import { SalesService } from '../../../../src/modules/sales/sales.service';
 import { SalesRepositoryInMemory } from '../../../../src/modules/sales/repository/sales.repository-in-memory';
-import { SalesStatus } from '../../../../src/modules/sales/sales.dto';
+import { SalesStatus, SalesDTO } from '../../../../src/modules/sales/sales.dto';
 
 describe('Sales Integration', () => {
   let sut: SalesController;
   let service: SalesService;
   let repository: SalesRepositoryInMemory;
   let request = {} as any;
-  let payload = {} as any;
+  let payload = {} as SalesDTO;
 
   beforeEach(() => {
     repository = new SalesRepositoryInMemory();
@@ -24,7 +24,7 @@ describe('Sales Integration', () => {
       description: 'Teste',
       date: new Date().toISOString(),
       total: 19.5,
-      paymentStatus: 'PENDING',
+      paymentStatus: SalesStatus.PENDING,
       paymentDate: new Date().toISOString(),
     };
   });
@@ -50,7 +50,7 @@ describe('Sales Integration', () => {
     });
 
     it('Should return status code 400 when paymentStatus is invalid', async () => {
-      payload.paymentStatus = 'any';
+      payload.paymentStatus = 'any' as any;
       try {
         await sut.create(request, payload);
       } catch (error) {
@@ -130,6 +130,41 @@ describe('Sales Integration', () => {
       delete payload.idclients;
       try {
         await sut.findByClient(request);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
+  });
+
+  describe('FindPending', () => {
+    it('Should return sales pendings', async () => {
+      payload.paymentStatus = SalesStatus.PENDING;
+      await sut.create(request, payload);
+      request.query['idclients'] = payload.idclients;
+
+      const result = await sut.findPending(request);
+
+      expect(result[0].paymentStatus).toBe(SalesStatus.PENDING);
+    });
+
+    it('Should return sales pendings by client', async () => {
+      const idclients = 1;
+      payload.idclients = idclients;
+      payload.paymentStatus = SalesStatus.PENDING;
+      await sut.create(request, payload);
+      request.query['idclients'] = payload.idclients;
+
+      const result = await sut.findPendingByClient(request);
+
+      expect(result[0].idclients).toBe(idclients);
+      expect(result[0].paymentStatus).toBe(SalesStatus.PENDING);
+    });
+
+    it('Should return status code 400 when idclients is not provided', async () => {
+      delete payload.idclients;
+
+      try {
+        await sut.findPendingByClient(request);
       } catch (error) {
         expect(error.status).toBe(400);
       }

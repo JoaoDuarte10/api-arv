@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Database } from '../../../config/db-conn';
 import { SalesDTO, SalesStatus } from '../sales.dto';
+import { SalesRepository } from './sales-repository';
 
 @Injectable()
-export class SalesRepository {
+export class SalesRepositoryPostgres implements SalesRepository {
   constructor(
     @Inject('DATABASE_CONNECTION') private readonly database: Database,
   ) {}

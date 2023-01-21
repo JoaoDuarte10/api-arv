@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { SalesDTO, SalesStatus } from '../sales.dto';
+import { SalesRepository } from './sales-repository';
 
 @Injectable()
-export class SalesRepositoryInMemory {
+export class SalesRepositoryInMemory implements SalesRepository {
   sales: SalesDTO[] = [];
 
   async create(sales: SalesDTO): Promise<void> {
@@ -44,6 +45,47 @@ export class SalesRepositoryInMemory {
     return this.sales.find(
       (sale) => sale.idusers === idusers && sale.idsales === idsales,
     );
+  }
+
+  async findPending(idusers: number): Promise<SalesDTO[]> {
+    return this.sales.filter(
+      (sale) =>
+        sale.idusers === idusers && sale.paymentStatus === SalesStatus.PENDING,
+    );
+  }
+
+  async findPendingByClient(
+    idusers: number,
+    idclients: number,
+  ): Promise<SalesDTO[]> {
+    return this.sales.filter(
+      (sale) =>
+        sale.idusers === idusers &&
+        sale.paymentStatus === SalesStatus.PENDING &&
+        sale.idclients === idclients,
+    );
+  }
+
+  getBasicInfoReports(
+    idusers: number,
+    date1: string,
+    date2: string,
+  ): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+  getBiggestTotalWithRangeDate(
+    idusers: number,
+    date1: string,
+    date2: string,
+  ): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+  getLowestTotalWithRangeDate(
+    idusers: number,
+    date1: string,
+    date2: string,
+  ): Promise<any> {
+    throw new Error('Method not implemented.');
   }
 
   async delete(idusers: number, idsales: number): Promise<void> {
