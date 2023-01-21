@@ -79,6 +79,9 @@ export class SalesService {
       this.salesRepository.getBiggestTotalWithRangeDate(idusers, date1, date2),
       this.salesRepository.getLowestTotalWithRangeDate(idusers, date1, date2),
     ]).then((result) => {
+      if (!result[0] || !result[1] || !result[2]) {
+        return;
+      }
       reports['basicInfos'] = {
         total: Number(result[0].total),
         quantity: Number(result[0].quantity),

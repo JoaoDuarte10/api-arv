@@ -13,6 +13,7 @@ import { RequestType } from '../../types/request';
 import { SalesDTO } from './sales.dto';
 import { handleController } from '../../infra/http/handle-controller';
 import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
+import { NotFoundReportsException } from './exceptions/not-found-reports';
 
 @Controller('sales')
 export class SalesController {
@@ -132,11 +133,15 @@ export class SalesController {
       if (!date1 || !date2) {
         throw new InvalidParamsRequestException('The range date is invalid');
       }
-      return await this.salesService.findReports(
+      const reports = await this.salesService.findReports(
         req.user.idusers,
         date1,
         date2,
       );
+      if (!Object.values(reports).length) {
+        throw new NotFoundReportsException('Not found reports.');
+      }
+      return reports;
     });
   }
 }

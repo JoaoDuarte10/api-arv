@@ -83,7 +83,6 @@ describe('ScheduleIntegration', () => {
       await sut.create(request, payload);
 
       expect(repository.schedules.length).toBe(1);
-      console.log(repository.schedules);
     });
   });
 

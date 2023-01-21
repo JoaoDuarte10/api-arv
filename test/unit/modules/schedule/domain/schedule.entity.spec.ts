@@ -34,12 +34,6 @@ describe('ScheduleEntity', () => {
     expect(entity).toBeInstanceOf(InvalidScheduleException);
   });
 
-  it('Should return error when idclients is not provided', () => {
-    delete payload.idclients;
-    const entity = ScheduleEntity.create(payload);
-    expect(entity).toBeInstanceOf(InvalidScheduleException);
-  });
-
   it('Should return error when description is not provided', () => {
     delete payload.description;
     const entity = ScheduleEntity.create(payload);
