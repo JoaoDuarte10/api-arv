@@ -5,6 +5,7 @@ import { RulesModule } from './rules/rule.module';
 import { SegmentModule } from './segments/segent.module';
 import { SalesModule } from './sales/sales.module';
 import { ScheduleModule } from './schedules/schedule.module';
+import { OutgoingModule } from './outgoing/outgoing.module';
 
 export const Modules = [
   ClientModule,
@@ -14,4 +15,5 @@ export const Modules = [
   SegmentModule,
   SalesModule,
   ScheduleModule,
+  OutgoingModule,
 ];

@@ -1,6 +1,6 @@
 import { ScheduleDTO, ScheduleStatus } from '../schedule-dto';
-import { InvalidParamsEntityException } from './exceptions/invalid-params-entity';
 import { InvalidScheduleException } from './exceptions/invalid-schedule';
+import { InvalidParamsEntityException } from '../../../exceptions/invalid-params-entity';
 
 export class ScheduleEntity {
   private constructor(private readonly props: ScheduleDTO) {}

@@ -1,4 +1,4 @@
-import { BaseEntityException } from '../../../../exceptions/entity';
+import { BaseEntityException } from './entity';
 
 export class InvalidParamsEntityException extends BaseEntityException {
   constructor(message: string, details?: any[]) {
