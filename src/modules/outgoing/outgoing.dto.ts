@@ -60,7 +60,6 @@ export class OutgoingDTO {
     | OutgoingPaymentMethodTypeTranslated;
 
   @ApiProperty()
-  @IsBoolean()
   @IsOptional()
   installment: boolean | OutgoingInstallmentTranslated;
 

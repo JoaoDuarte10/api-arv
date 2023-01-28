@@ -10,6 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 import {
   OutgoingDTO,
   OutgoingPaymentMethodTypeTranslated,
+  OutgoingInstallmentTranslated,
 } from './outgoing.dto';
 import { RequestType } from '../../types/request';
 import { OutgoingService } from './outgoing.service';
@@ -48,6 +49,12 @@ export class OutgoingController {
   @Get('payment-enums')
   getPaymentMethodEnums(): OutgoingPaymentMethodTypeTranslated {
     return this.outgoingService.getPaymentMethodEnums();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('installment-enums')
+  getInstallmentEnums(): OutgoingInstallmentTranslated {
+    return this.outgoingService.getInstallmentEnums();
   }
 
   @UseGuards(JwtAuthGuard)

@@ -40,6 +40,15 @@ export class OutgoingService {
     } as any;
   }
 
+  getInstallmentEnums(): OutgoingInstallmentTranslated {
+    return {
+      [OutgoingInstallmentTranslated.A_VISTA]:
+        OutgoingInstallmentTranslated.A_VISTA,
+      [OutgoingInstallmentTranslated.PARCELADO]:
+        OutgoingInstallmentTranslated.PARCELADO,
+    } as any;
+  }
+
   async getAll(idusers: number): Promise<OutgoingDTO[]> {
     const outgoings = await this.outgoingRepository.getAll(idusers);
     return this.normalizePayload(outgoings);

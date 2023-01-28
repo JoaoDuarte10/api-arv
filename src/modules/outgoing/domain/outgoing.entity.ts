@@ -1,5 +1,6 @@
 import {
   OutgoingDTO,
+  OutgoingInstallmentTranslated,
   OutgoingPaymentMethodType,
   OutgoingPaymentMethodTypeTranslated,
 } from '../outgoing.dto';
@@ -36,6 +37,15 @@ export class OutgoingEntity {
         'Invalids params for create outgoing entity',
         errors,
       );
+    }
+
+    switch (params.installment) {
+      case OutgoingInstallmentTranslated.A_VISTA:
+        params.installment = false;
+        break;
+      case OutgoingInstallmentTranslated.PARCELADO:
+        params.installment = true;
+        break;
     }
 
     switch (params.paymentMethod) {

@@ -34,7 +34,7 @@ export class OutgoingRepositoryPostgres implements OutgoingRepository {
 
   async getAll(idusers: number): Promise<OutgoingDTO[]> {
     const sql = {
-      query: `SELECT * FROM api_arv.outgoing WHERE idusers = $1`,
+      query: `SELECT * FROM api_arv.outgoing WHERE idusers = $1 ORDER BY date`,
       values: [idusers],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -43,7 +43,7 @@ export class OutgoingRepositoryPostgres implements OutgoingRepository {
 
   async getByDate(idusers: number, date: Date): Promise<OutgoingDTO[]> {
     const sql = {
-      query: `SELECT * FROM api_arv.outgoing WHERE idusers = $1 AND date = $2`,
+      query: `SELECT * FROM api_arv.outgoing WHERE idusers = $1 AND date = $2 ORDER BY date`,
       values: [idusers, date],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
@@ -56,7 +56,7 @@ export class OutgoingRepositoryPostgres implements OutgoingRepository {
     date2: Date,
   ): Promise<OutgoingDTO[]> {
     const sql = {
-      query: `SELECT * FROM api_arv.outgoing WHERE idusers = $1 AND date BETWEEN $2 AND $3`,
+      query: `SELECT * FROM api_arv.outgoing WHERE idusers = $1 AND date BETWEEN $2 AND $3 ORDER BY date`,
       values: [idusers, date1, date2],
     };
     const { rows } = await this.database.query(sql.query, sql.values);

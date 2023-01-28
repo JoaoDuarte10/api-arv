@@ -2,6 +2,7 @@ import { OutgoingController } from '../../../../src/modules/outgoing/outgoing.co
 import {
   OutgoingDTO,
   OutgoingPaymentMethodTypeTranslated,
+  OutgoingInstallmentTranslated,
 } from '../../../../src/modules/outgoing/outgoing.dto';
 import { UserDto } from '../../../../src/modules/users/user-dto';
 import { OutgoingRepositoryInMemory } from '../../../../src/modules/outgoing/repository/outgoing.repository-in-memory';
@@ -94,6 +95,19 @@ describe('Outgoing Integration', () => {
           OutgoingPaymentMethodTypeTranslated.DINHEIRO,
         [OutgoingPaymentMethodTypeTranslated.PIX]:
           OutgoingPaymentMethodTypeTranslated.PIX,
+      });
+    });
+  });
+
+  describe('Get Installment Enums', () => {
+    it('Should return enums with installments', async () => {
+      const result = sut.getInstallmentEnums();
+
+      expect(result).toMatchObject({
+        [OutgoingInstallmentTranslated.A_VISTA]:
+          OutgoingInstallmentTranslated.A_VISTA,
+        [OutgoingInstallmentTranslated.PARCELADO]:
+          OutgoingInstallmentTranslated.PARCELADO,
       });
     });
   });
