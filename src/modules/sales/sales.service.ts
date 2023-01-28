@@ -5,6 +5,10 @@ import { TotalSalesIsEmptyException } from './exceptions/total-sales-is-empty';
 import { InvalidStatusSalesException } from './exceptions/invalid-status-sales';
 import { InvalidPaymentDateException } from './exceptions/invalid-payment-date';
 import { SalesNotExistsException } from './exceptions/sales-not-exists';
+import {
+  PaymentMethodTypeTranslated,
+  PaymentMethodType,
+} from '../../types/payment';
 
 @Injectable()
 export class SalesService {
@@ -23,14 +27,25 @@ export class SalesService {
     if (sale.paymentStatus === SalesStatus.PENDING && !sale.paymentDate) {
       throw new InvalidPaymentDateException('Payment date is invalid');
     }
+    if (
+      !sale.paymentMethod ||
+      (sale.paymentMethod !== PaymentMethodTypeTranslated.BOLETO &&
+        sale.paymentMethod !== PaymentMethodTypeTranslated.CARTAO_DE_CREDITO &&
+        sale.paymentMethod !== PaymentMethodTypeTranslated.DINHEIRO &&
+        sale.paymentMethod !== PaymentMethodTypeTranslated.PIX)
+    ) {
+      throw new InvalidPaymentDateException('Payment method is invalid');
+    }
     if (sale.paymentStatus === SalesStatus.PAID && !sale.paymentDate) {
       sale.paymentDate = new Date().toISOString();
     }
+    sale.paymentMethod = this.translatePaymentMethod(sale.paymentMethod);
     await this.salesRepository.create(sale);
   }
 
   async findByDate(idusers: number, date: string): Promise<SalesDTO[]> {
-    return await this.salesRepository.findByDate(idusers, date);
+    const sales = await this.salesRepository.findByDate(idusers, date);
+    return this.normalizePayload(sales);
   }
 
   async findByPeriod(
@@ -38,22 +53,33 @@ export class SalesService {
     date1: string,
     date2: string,
   ): Promise<SalesDTO[]> {
-    return await this.salesRepository.findByPeriod(idusers, date1, date2);
+    const sales = await this.salesRepository.findByPeriod(
+      idusers,
+      date1,
+      date2,
+    );
+    return this.normalizePayload(sales);
   }
 
   async findByClient(idusers: number, idclients: number): Promise<any> {
-    return await this.salesRepository.findByClient(idusers, idclients);
+    const sales = await this.salesRepository.findByClient(idusers, idclients);
+    return this.normalizePayload(sales);
   }
 
   async findPending(idusers: number): Promise<SalesDTO[]> {
-    return await this.salesRepository.findPending(idusers);
+    const sales = await this.salesRepository.findPending(idusers);
+    return this.normalizePayload(sales);
   }
 
   async findPendingByClient(
     idusers: number,
     idclients: number,
   ): Promise<SalesDTO[]> {
-    return await this.salesRepository.findPendingByClient(idusers, idclients);
+    const sales = await this.salesRepository.findPendingByClient(
+      idusers,
+      idclients,
+    );
+    return this.normalizePayload(sales);
   }
 
   async delete(idusers: number, idsales: number): Promise<void> {
@@ -102,5 +128,46 @@ export class SalesService {
       };
     });
     return reports;
+  }
+
+  private translatePaymentMethod(
+    method: PaymentMethodTypeTranslated,
+  ): PaymentMethodType {
+    switch (method) {
+      case PaymentMethodTypeTranslated.BOLETO:
+        return PaymentMethodType.BILLET;
+      case PaymentMethodTypeTranslated.CARTAO_DE_CREDITO:
+        return PaymentMethodType.CREDIT_CARD;
+      case PaymentMethodTypeTranslated.DINHEIRO:
+        return PaymentMethodType.CASH;
+      case PaymentMethodTypeTranslated.PIX:
+        return PaymentMethodType.PIX;
+    }
+  }
+
+  private translatePaymentMethodToBr(
+    method: PaymentMethodType,
+  ): PaymentMethodTypeTranslated {
+    switch (method) {
+      case PaymentMethodType.BILLET:
+        return PaymentMethodTypeTranslated.BOLETO;
+      case PaymentMethodType.CASH:
+        return PaymentMethodTypeTranslated.DINHEIRO;
+      case PaymentMethodType.CREDIT_CARD:
+        return PaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
+      case PaymentMethodType.PIX:
+        return PaymentMethodTypeTranslated.PIX;
+    }
+  }
+
+  private normalizePayload(sales: SalesDTO[]): SalesDTO[] {
+    return sales.map((sale) => {
+      return {
+        ...sale,
+        paymentMethod: this.translatePaymentMethodToBr(
+          sale.paymentMethod as PaymentMethodType,
+        ),
+      };
+    });
   }
 }

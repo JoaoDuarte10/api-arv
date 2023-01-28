@@ -33,6 +33,7 @@ export class SalesController {
         total: sale.total,
         paymentStatus: sale.paymentStatus,
         paymentDate: sale.paymentDate,
+        paymentMethod: sale.paymentMethod,
       };
       await this.salesService.create(payload);
     });

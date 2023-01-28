@@ -1,25 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsString,
-  IsOptional,
-  IsNumber,
-  IsBoolean,
-  IsNotEmpty,
-} from 'class-validator';
-
-export enum OutgoingPaymentMethodType {
-  CREDIT_CARD = 'CREDIT_CARD',
-  CASH = 'CASH',
-  PIX = 'PIX',
-  BILLET = 'BILLET',
-}
-
-export enum OutgoingPaymentMethodTypeTranslated {
-  CARTAO_DE_CREDITO = 'Cartão de crédito',
-  DINHEIRO = 'Dinheiro',
-  PIX = 'PIX',
-  BOLETO = 'Boleto',
-}
+  PaymentMethodType,
+  PaymentMethodTypeTranslated,
+} from '../../types/payment';
+import { IsString, IsOptional, IsNumber, IsNotEmpty } from 'class-validator';
 
 export enum OutgoingInstallmentTranslated {
   A_VISTA = 'À vista',
@@ -55,9 +39,7 @@ export class OutgoingDTO {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  paymentMethod:
-    | OutgoingPaymentMethodType
-    | OutgoingPaymentMethodTypeTranslated;
+  paymentMethod: PaymentMethodType | PaymentMethodTypeTranslated;
 
   @ApiProperty()
   @IsOptional()

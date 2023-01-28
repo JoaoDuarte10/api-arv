@@ -1,5 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  PaymentMethodType,
+  PaymentMethodTypeTranslated,
+} from '../../types/payment';
 
 export enum SalesStatus {
   PAID = 'PAID',
@@ -49,11 +53,16 @@ export class SalesDTO {
 
   @ApiProperty()
   @IsString()
-  @IsOptional()
-  created_at?: string;
+  @IsNotEmpty()
+  paymentMethod: PaymentMethodType | PaymentMethodTypeTranslated;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  updated_at?: string;
+  createdAt?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  updatedAt?: string;
 }

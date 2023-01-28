@@ -8,8 +8,8 @@ export class SalesRepositoryInMemory implements SalesRepository {
 
   async create(sales: SalesDTO): Promise<void> {
     sales.idsales = this.sales.length + 1;
-    sales.created_at = new Date().toISOString();
-    sales.updated_at = null;
+    sales.createdAt = new Date().toISOString();
+    sales.updatedAt = null;
     Promise.resolve(this.sales.push(sales));
   }
 

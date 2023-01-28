@@ -1,14 +1,13 @@
 import { OutgoingRepository } from './repository/outgoing.repository';
 import { Injectable } from '@nestjs/common';
-import {
-  OutgoingDTO,
-  OutgoingPaymentMethodType,
-  OutgoingPaymentMethodTypeTranslated,
-  OutgoingInstallmentTranslated,
-} from './outgoing.dto';
+import { OutgoingDTO, OutgoingInstallmentTranslated } from './outgoing.dto';
 import { OutgoingEntity } from './domain/outgoing.entity';
 import { InvalidOutgoingException } from './domain/exceptions/invalid-outgoing';
 import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
+import {
+  PaymentMethodTypeTranslated,
+  PaymentMethodType,
+} from '../../types/payment';
 
 @Injectable()
 export class OutgoingService {
@@ -27,16 +26,14 @@ export class OutgoingService {
     await this.outgoingRepository.create(outgoing.getProps());
   }
 
-  getPaymentMethodEnums(): OutgoingPaymentMethodTypeTranslated {
+  getPaymentMethodEnums(): PaymentMethodTypeTranslated {
     return {
-      [OutgoingPaymentMethodTypeTranslated.BOLETO]:
-        OutgoingPaymentMethodTypeTranslated.BOLETO,
-      [OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO]:
-        OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
-      [OutgoingPaymentMethodTypeTranslated.DINHEIRO]:
-        OutgoingPaymentMethodTypeTranslated.DINHEIRO,
-      [OutgoingPaymentMethodTypeTranslated.PIX]:
-        OutgoingPaymentMethodTypeTranslated.PIX,
+      [PaymentMethodTypeTranslated.BOLETO]: PaymentMethodTypeTranslated.BOLETO,
+      [PaymentMethodTypeTranslated.CARTAO_DE_CREDITO]:
+        PaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
+      [PaymentMethodTypeTranslated.DINHEIRO]:
+        PaymentMethodTypeTranslated.DINHEIRO,
+      [PaymentMethodTypeTranslated.PIX]: PaymentMethodTypeTranslated.PIX,
     } as any;
   }
 
@@ -83,7 +80,7 @@ export class OutgoingService {
         ...outgoing,
         total: Number(outgoing.total),
         paymentMethod: this.translatedPaymentMethod(
-          outgoing.paymentMethod as OutgoingPaymentMethodType,
+          outgoing.paymentMethod as PaymentMethodType,
         ),
         installment: this.translatedInstallment(
           outgoing.installment as boolean,
@@ -93,17 +90,17 @@ export class OutgoingService {
   }
 
   private translatedPaymentMethod(
-    paymentMethod: OutgoingPaymentMethodType,
-  ): OutgoingPaymentMethodTypeTranslated {
+    paymentMethod: PaymentMethodType,
+  ): PaymentMethodTypeTranslated {
     switch (paymentMethod) {
-      case OutgoingPaymentMethodType.BILLET:
-        return OutgoingPaymentMethodTypeTranslated.BOLETO;
-      case OutgoingPaymentMethodType.CASH:
-        return OutgoingPaymentMethodTypeTranslated.DINHEIRO;
-      case OutgoingPaymentMethodType.CREDIT_CARD:
-        return OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
-      case OutgoingPaymentMethodType.PIX:
-        return OutgoingPaymentMethodTypeTranslated.PIX;
+      case PaymentMethodType.BILLET:
+        return PaymentMethodTypeTranslated.BOLETO;
+      case PaymentMethodType.CASH:
+        return PaymentMethodTypeTranslated.DINHEIRO;
+      case PaymentMethodType.CREDIT_CARD:
+        return PaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
+      case PaymentMethodType.PIX:
+        return PaymentMethodTypeTranslated.PIX;
     }
   }
 

@@ -7,16 +7,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import {
-  OutgoingDTO,
-  OutgoingPaymentMethodTypeTranslated,
-  OutgoingInstallmentTranslated,
-} from './outgoing.dto';
+import { OutgoingDTO, OutgoingInstallmentTranslated } from './outgoing.dto';
 import { RequestType } from '../../types/request';
 import { OutgoingService } from './outgoing.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { handleController } from '../../infra/http/handle-controller';
 import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
+import { PaymentMethodTypeTranslated } from '../../types/payment';
 
 @ApiTags('Outgoing')
 @Controller('outgoing')
@@ -47,7 +44,7 @@ export class OutgoingController {
 
   @UseGuards(JwtAuthGuard)
   @Get('payment-enums')
-  getPaymentMethodEnums(): OutgoingPaymentMethodTypeTranslated {
+  getPaymentMethodEnums(): PaymentMethodTypeTranslated {
     return this.outgoingService.getPaymentMethodEnums();
   }
 

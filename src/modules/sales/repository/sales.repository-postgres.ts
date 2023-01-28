@@ -18,9 +18,10 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 date,
                 total,
                 payment_status,
-                payment_date
+                payment_date,
+                payment_method
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7
+                $1, $2, $3, $4, $5, $6, $7, $8
             )`,
       values: [
         sales.idusers,
@@ -30,6 +31,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
         sales.total,
         sales.paymentStatus,
         sales.paymentDate,
+        sales.paymentMethod,
       ],
     };
     await this.database.query(sql.query, sql.values);
@@ -46,6 +48,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.total,
                 s.payment_status,
                 s.payment_date,
+                s.payment_method,
                 s.created_at
               FROM api_arv.sales s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
@@ -54,7 +57,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
       values: [idusers, date],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows;
+    return this.normalizePayload(rows);
   }
 
   async findByPeriod(
@@ -72,6 +75,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
               s.total,
               s.payment_status,
               s.payment_date,
+              s.payment_method,
               s.created_at
             FROM api_arv.sales s
             LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
@@ -81,7 +85,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
     };
 
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows;
+    return this.normalizePayload(rows);
   }
 
   async findByClient(idusers: number, idclients: number): Promise<SalesDTO[]> {
@@ -95,6 +99,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.total,
                 s.payment_status,
                 s.payment_date,
+                s.payment_method,
                 s.created_at
               FROM api_arv.sales s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
@@ -103,7 +108,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
       values: [idusers, idclients],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows;
+    return this.normalizePayload(rows);
   }
 
   async findPending(idusers: number): Promise<SalesDTO[]> {
@@ -117,6 +122,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.total,
                 s.payment_status,
                 s.payment_date,
+                s.payment_method,
                 s.created_at
               FROM api_arv.sales s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
@@ -125,7 +131,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
       values: [idusers],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows;
+    return this.normalizePayload(rows);
   }
 
   async findPendingByClient(
@@ -142,6 +148,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.total,
                 s.payment_status,
                 s.payment_date,
+                s.payment_method,
                 s.created_at
               FROM api_arv.sales s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
@@ -150,7 +157,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
       values: [idusers, idclients],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows;
+    return this.normalizePayload(rows);
   }
 
   async findOne(idusers: number, idsales: number): Promise<SalesDTO> {
@@ -164,6 +171,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.total,
                 s.payment_status,
                 s.payment_date,
+                s.payment_method,
                 s.created_at
               FROM api_arv.sales s
               LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
@@ -172,7 +180,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
       values: [idusers, idsales],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows[0];
+    return this.normalizePayload(rows[0])[0];
   }
 
   async delete(idusers: number, idsales: number): Promise<void> {
@@ -209,7 +217,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
       values: [idusers, date1, date2],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows[0];
+    return this.normalizePayload(rows[0]);
   }
 
   async getBiggestTotalWithRangeDate(
@@ -230,7 +238,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
       values: [idusers, date1, date2],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows[0];
+    return this.normalizePayload(rows[0]);
   }
 
   async getLowestTotalWithRangeDate(
@@ -251,6 +259,26 @@ export class SalesRepositoryPostgres implements SalesRepository {
       values: [idusers, date1, date2],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return rows[0];
+    return this.normalizePayload(rows[0]);
+  }
+
+  private normalizePayload(sales: any[]): SalesDTO[] {
+    return sales.length
+      ? sales.map((sale) => {
+          return {
+            idsales: sale.idsales,
+            idclients: sale.idclients,
+            client: sale.client,
+            description: sale.description,
+            date: sale.date,
+            total: sale.total,
+            paymentStatus: sale.payment_status,
+            paymentDate: sale.payment_date,
+            paymentMethod: sale.payment_method,
+            createdAt: sale.created_at,
+            updatedAt: sale.updated_at,
+          };
+        })
+      : sales;
   }
 }

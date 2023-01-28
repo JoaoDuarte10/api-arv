@@ -1,11 +1,10 @@
-import {
-  OutgoingDTO,
-  OutgoingInstallmentTranslated,
-  OutgoingPaymentMethodType,
-  OutgoingPaymentMethodTypeTranslated,
-} from '../outgoing.dto';
+import { OutgoingDTO, OutgoingInstallmentTranslated } from '../outgoing.dto';
 import { InvalidOutgoingException } from './exceptions/invalid-outgoing';
 import { InvalidParamsEntityException } from '../../../exceptions/invalid-params-entity';
+import {
+  PaymentMethodTypeTranslated,
+  PaymentMethodType,
+} from '../../../types/payment';
 
 export class OutgoingEntity {
   private constructor(private readonly props: OutgoingDTO) {}
@@ -17,11 +16,11 @@ export class OutgoingEntity {
 
     if (
       !params.paymentMethod ||
-      (params.paymentMethod !== OutgoingPaymentMethodTypeTranslated.BOLETO &&
-        params.paymentMethod !== OutgoingPaymentMethodTypeTranslated.DINHEIRO &&
+      (params.paymentMethod !== PaymentMethodTypeTranslated.BOLETO &&
+        params.paymentMethod !== PaymentMethodTypeTranslated.DINHEIRO &&
         params.paymentMethod !==
-          OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO &&
-        params.paymentMethod !== OutgoingPaymentMethodTypeTranslated.PIX)
+          PaymentMethodTypeTranslated.CARTAO_DE_CREDITO &&
+        params.paymentMethod !== PaymentMethodTypeTranslated.PIX)
     ) {
       errors.push(
         new InvalidParamsEntityException('Payment method is invalid'),
@@ -49,17 +48,17 @@ export class OutgoingEntity {
     }
 
     switch (params.paymentMethod) {
-      case OutgoingPaymentMethodTypeTranslated.BOLETO:
-        params.paymentMethod = OutgoingPaymentMethodType.BILLET;
+      case PaymentMethodTypeTranslated.BOLETO:
+        params.paymentMethod = PaymentMethodType.BILLET;
         break;
-      case OutgoingPaymentMethodTypeTranslated.DINHEIRO:
-        params.paymentMethod = OutgoingPaymentMethodType.CASH;
+      case PaymentMethodTypeTranslated.DINHEIRO:
+        params.paymentMethod = PaymentMethodType.CASH;
         break;
-      case OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO:
-        params.paymentMethod = OutgoingPaymentMethodType.CREDIT_CARD;
+      case PaymentMethodTypeTranslated.CARTAO_DE_CREDITO:
+        params.paymentMethod = PaymentMethodType.CREDIT_CARD;
         break;
-      case OutgoingPaymentMethodTypeTranslated.PIX:
-        params.paymentMethod = OutgoingPaymentMethodType.PIX;
+      case PaymentMethodTypeTranslated.PIX:
+        params.paymentMethod = PaymentMethodType.PIX;
         break;
     }
 
