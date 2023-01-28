@@ -2,6 +2,10 @@ import { SalesController } from '../../../../src/modules/sales/sales.controller'
 import { SalesService } from '../../../../src/modules/sales/sales.service';
 import { SalesRepositoryInMemory } from '../../../../src/modules/sales/repository/sales.repository-in-memory';
 import { SalesStatus, SalesDTO } from '../../../../src/modules/sales/sales.dto';
+import {
+  PaymentMethodType,
+  PaymentMethodTypeTranslated,
+} from '../../../../src/types/payment';
 
 describe('Sales Integration', () => {
   let sut: SalesController;
@@ -26,6 +30,7 @@ describe('Sales Integration', () => {
       total: 19.5,
       paymentStatus: SalesStatus.PENDING,
       paymentDate: new Date().toISOString(),
+      paymentMethod: PaymentMethodTypeTranslated.BOLETO,
     };
   });
 
@@ -78,6 +83,38 @@ describe('Sales Integration', () => {
       await sut.create(request, payload);
 
       expect(repository.sales[0].paymentDate).not.toBeFalsy();
+    });
+
+    it('Should return status code 400 when paymentMethod is not provided', async () => {
+      delete payload.paymentMethod;
+
+      try {
+        await sut.create(request, payload);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+      expect(repository.sales.length).toBe(0);
+    });
+
+    it('Should return status code 400 when paymentMethod is invalid', async () => {
+      payload.paymentMethod = 'invalid' as any;
+
+      try {
+        await sut.create(request, payload);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+      expect(repository.sales.length).toBe(0);
+    });
+
+    it('Should translate paymentMethod before save sale', async () => {
+      payload.paymentMethod = PaymentMethodTypeTranslated.BOLETO;
+
+      await sut.create(request, payload);
+
+      expect(repository.sales[0].paymentMethod).toBe(PaymentMethodType.BILLET);
     });
   });
 

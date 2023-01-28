@@ -1,11 +1,13 @@
 import {
   OutgoingDTO,
-  OutgoingPaymentMethodType,
   OutgoingInstallmentTranslated,
-  OutgoingPaymentMethodTypeTranslated,
 } from '../../../../src/modules/outgoing/outgoing.dto';
 import { OutgoingService } from '../../../../src/modules/outgoing/outgoing.service';
 import { OutgoingRepositoryInMemory } from '../../../../src/modules/outgoing/repository/outgoing.repository-in-memory';
+import {
+  PaymentMethodType,
+  PaymentMethodTypeTranslated,
+} from '../../../../src/types/payment';
 
 describe('Outgoing Service', () => {
   let sut: OutgoingService;
@@ -22,54 +24,49 @@ describe('Outgoing Service', () => {
       description: 'any description',
       date: new Date(),
       total: 15,
-      paymentMethod: OutgoingPaymentMethodType.PIX,
+      paymentMethod: PaymentMethodType.PIX,
       installment: false,
     };
   });
 
   describe('GetAll', () => {
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.PIX', async () => {
-      payload.paymentMethod = OutgoingPaymentMethodType.PIX;
+      payload.paymentMethod = PaymentMethodType.PIX;
       await sut.create(payload);
 
       const result = await sut.getAll(payload.idusers);
 
-      expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.PIX,
-      );
+      expect(result[0].paymentMethod).toBe(PaymentMethodTypeTranslated.PIX);
     });
 
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.BILLET', async () => {
-      payload.paymentMethod = OutgoingPaymentMethodTypeTranslated.BOLETO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.BOLETO;
       await sut.create(payload);
 
       const result = await sut.getAll(payload.idusers);
 
-      expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.BOLETO,
-      );
+      expect(result[0].paymentMethod).toBe(PaymentMethodTypeTranslated.BOLETO);
     });
 
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.CREDIT_CARD', async () => {
-      payload.paymentMethod =
-        OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
       await sut.create(payload);
 
       const result = await sut.getAll(payload.idusers);
 
       expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
+        PaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
       );
     });
 
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.CASH', async () => {
-      payload.paymentMethod = OutgoingPaymentMethodTypeTranslated.DINHEIRO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.DINHEIRO;
       await sut.create(payload);
 
       const result = await sut.getAll(payload.idusers);
 
       expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.DINHEIRO,
+        PaymentMethodTypeTranslated.DINHEIRO,
       );
     });
 
@@ -96,47 +93,42 @@ describe('Outgoing Service', () => {
 
   describe('GetByDate', () => {
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.PIX', async () => {
-      payload.paymentMethod = OutgoingPaymentMethodTypeTranslated.PIX;
+      payload.paymentMethod = PaymentMethodTypeTranslated.PIX;
       await sut.create(payload);
 
       const result = await sut.getByDate(payload.idusers, payload.date);
 
-      expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.PIX,
-      );
+      expect(result[0].paymentMethod).toBe(PaymentMethodTypeTranslated.PIX);
     });
 
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.BILLET', async () => {
-      payload.paymentMethod = OutgoingPaymentMethodTypeTranslated.BOLETO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.BOLETO;
       await sut.create(payload);
 
       const result = await sut.getByDate(payload.idusers, payload.date);
 
-      expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.BOLETO,
-      );
+      expect(result[0].paymentMethod).toBe(PaymentMethodTypeTranslated.BOLETO);
     });
 
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.CREDIT_CARD', async () => {
-      payload.paymentMethod =
-        OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
       await sut.create(payload);
 
       const result = await sut.getByDate(payload.idusers, payload.date);
 
       expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
+        PaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
       );
     });
 
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.CASH', async () => {
-      payload.paymentMethod = OutgoingPaymentMethodTypeTranslated.DINHEIRO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.DINHEIRO;
       await sut.create(payload);
 
       const result = await sut.getByDate(payload.idusers, payload.date);
 
       expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.DINHEIRO,
+        PaymentMethodTypeTranslated.DINHEIRO,
       );
     });
 
@@ -163,7 +155,7 @@ describe('Outgoing Service', () => {
 
   describe('GetByPeriod', () => {
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.PIX', async () => {
-      payload.paymentMethod = OutgoingPaymentMethodTypeTranslated.PIX;
+      payload.paymentMethod = PaymentMethodTypeTranslated.PIX;
       await sut.create(payload);
 
       const result = await sut.getByPeriod(
@@ -172,13 +164,11 @@ describe('Outgoing Service', () => {
         payload.date,
       );
 
-      expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.PIX,
-      );
+      expect(result[0].paymentMethod).toBe(PaymentMethodTypeTranslated.PIX);
     });
 
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.BILLET', async () => {
-      payload.paymentMethod = OutgoingPaymentMethodTypeTranslated.BOLETO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.BOLETO;
       await sut.create(payload);
 
       const result = await sut.getByPeriod(
@@ -187,14 +177,11 @@ describe('Outgoing Service', () => {
         payload.date,
       );
 
-      expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.BOLETO,
-      );
+      expect(result[0].paymentMethod).toBe(PaymentMethodTypeTranslated.BOLETO);
     });
 
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.CREDIT_CARD', async () => {
-      payload.paymentMethod =
-        OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
       await sut.create(payload);
 
       const result = await sut.getByPeriod(
@@ -204,12 +191,12 @@ describe('Outgoing Service', () => {
       );
 
       expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
+        PaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
       );
     });
 
     it('Should return paymentMethod translated with OutgoingPaymentMethodType.CASH', async () => {
-      payload.paymentMethod = OutgoingPaymentMethodTypeTranslated.DINHEIRO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.DINHEIRO;
       await sut.create(payload);
 
       const result = await sut.getByPeriod(
@@ -219,7 +206,7 @@ describe('Outgoing Service', () => {
       );
 
       expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.DINHEIRO,
+        PaymentMethodTypeTranslated.DINHEIRO,
       );
     });
 

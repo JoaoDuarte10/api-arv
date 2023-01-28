@@ -1,12 +1,12 @@
 import { OutgoingController } from '../../../../src/modules/outgoing/outgoing.controller';
 import {
   OutgoingDTO,
-  OutgoingPaymentMethodTypeTranslated,
   OutgoingInstallmentTranslated,
 } from '../../../../src/modules/outgoing/outgoing.dto';
 import { UserDto } from '../../../../src/modules/users/user-dto';
 import { OutgoingRepositoryInMemory } from '../../../../src/modules/outgoing/repository/outgoing.repository-in-memory';
 import { OutgoingService } from '../../../../src/modules/outgoing/outgoing.service';
+import { PaymentMethodTypeTranslated } from '../../../../src/types/payment';
 
 describe('Outgoing Integration', () => {
   let sut: OutgoingController;
@@ -34,7 +34,7 @@ describe('Outgoing Integration', () => {
       description: 'any description',
       date: new Date(),
       total: 15,
-      paymentMethod: OutgoingPaymentMethodTypeTranslated.BOLETO,
+      paymentMethod: PaymentMethodTypeTranslated.BOLETO,
       installment: false,
     };
   });
@@ -87,14 +87,13 @@ describe('Outgoing Integration', () => {
       const result = sut.getPaymentMethodEnums();
 
       expect(result).toMatchObject({
-        [OutgoingPaymentMethodTypeTranslated.BOLETO]:
-          OutgoingPaymentMethodTypeTranslated.BOLETO,
-        [OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO]:
-          OutgoingPaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
-        [OutgoingPaymentMethodTypeTranslated.DINHEIRO]:
-          OutgoingPaymentMethodTypeTranslated.DINHEIRO,
-        [OutgoingPaymentMethodTypeTranslated.PIX]:
-          OutgoingPaymentMethodTypeTranslated.PIX,
+        [PaymentMethodTypeTranslated.BOLETO]:
+          PaymentMethodTypeTranslated.BOLETO,
+        [PaymentMethodTypeTranslated.CARTAO_DE_CREDITO]:
+          PaymentMethodTypeTranslated.CARTAO_DE_CREDITO,
+        [PaymentMethodTypeTranslated.DINHEIRO]:
+          PaymentMethodTypeTranslated.DINHEIRO,
+        [PaymentMethodTypeTranslated.PIX]: PaymentMethodTypeTranslated.PIX,
       });
     });
   });
@@ -138,14 +137,12 @@ describe('Outgoing Integration', () => {
 
     it('Should return paymentMethod translated to pt-BR', async () => {
       request.user.idusers = 5;
-      payload.paymentMethod = OutgoingPaymentMethodTypeTranslated.BOLETO;
+      payload.paymentMethod = PaymentMethodTypeTranslated.BOLETO;
       await sut.create(request, payload);
 
       const result = await sut.getAll(request);
 
-      expect(result[0].paymentMethod).toBe(
-        OutgoingPaymentMethodTypeTranslated.BOLETO,
-      );
+      expect(result[0].paymentMethod).toBe(PaymentMethodTypeTranslated.BOLETO);
     });
   });
 
