@@ -14,7 +14,9 @@ import { ScheduleDTO } from './schedule-dto';
 import { ScheduleService } from './schedule.service';
 import { handleController } from '../../infra/http/handle-controller';
 import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Schedules')
 @Controller('schedule')
 export class ScheduleController {
   constructor(private readonly service: ScheduleService) {}

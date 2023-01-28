@@ -4,7 +4,9 @@ import { FindClientService } from '../services/find';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RequestType } from '../../../types/request';
 import { handleController } from '../../../infra/http/handle-controller';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Client')
 @Controller('client')
 export class FindAllClientsController {
   constructor(private readonly service: FindClientService) {}

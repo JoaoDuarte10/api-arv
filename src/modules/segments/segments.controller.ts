@@ -13,7 +13,9 @@ import { SegmentService } from './segment.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RequestType } from '../../types/request';
 import { handleController } from 'src/infra/http/handle-controller';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Segments')
 @Controller('segments')
 export class SegmentController {
   constructor(private readonly segmentService: SegmentService) {}

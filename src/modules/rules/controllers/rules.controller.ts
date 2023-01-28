@@ -4,7 +4,9 @@ import { RulesDTO } from '../rules.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RequestType } from '../../../types/request';
 import { InvalidParamsRequestException } from '../../../exceptions/invalid-params-request';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Rules')
 @Controller('rules')
 export class RulesController {
   constructor(private readonly rulesService: RulesService) {}

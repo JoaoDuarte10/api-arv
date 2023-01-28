@@ -3,7 +3,9 @@ import { DeleteClientService } from '../services/delete';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RequestType } from '../../../types/request';
 import { handleController } from '../../../infra/http/handle-controller';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Client')
 @Controller('client')
 export class DeleteClientController {
   constructor(private readonly service: DeleteClientService) {}

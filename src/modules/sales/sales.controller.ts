@@ -14,7 +14,9 @@ import { SalesDTO } from './sales.dto';
 import { handleController } from '../../infra/http/handle-controller';
 import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
 import { NotFoundReportsException } from './exceptions/not-found-reports';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Sales')
 @Controller('sales')
 export class SalesController {
   constructor(private readonly salesService: SalesService) {}
