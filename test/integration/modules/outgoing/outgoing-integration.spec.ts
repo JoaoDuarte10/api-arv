@@ -266,4 +266,37 @@ describe('Outgoing Integration', () => {
       }
     });
   });
+
+  describe('Delete', () => {
+    it('Should delete an outgoing', async () => {
+      await sut.create(request, payload);
+
+      request.query['idoutgoing'] = repository.outgoings[0].idoutgoing;
+
+      await sut.delete(request);
+      expect(repository.outgoings.length).toBe(0);
+    });
+
+    it('Should return status code 400 when idusers is not provided', async () => {
+      delete request.user.idusers;
+
+      try {
+        await sut.delete(request);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
+
+    it('Should return status code 400 when idoutgoing is not provided', async () => {
+      delete request.query['idoutgoing'];
+
+      try {
+        await sut.delete(request);
+        expect(true).toBe(false);
+      } catch (error) {
+        expect(error.status).toBe(400);
+      }
+    });
+  });
 });
