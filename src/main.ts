@@ -19,9 +19,11 @@ async function bootstrap() {
     .setVersion(version)
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('/api/docs', app, document);
   app.enableCors();
-  app.use(swStats.getMiddleware({ swaggerSpec: document }));
+  app.use(
+    swStats.getMiddleware({ swaggerSpec: document, uriPath: '/api/metrics' }),
+  );
 
   const { port } = app.get(AppConfig);
   await app.listen(port, '0.0.0.0');

@@ -111,4 +111,8 @@ export class OutgoingService {
       ? OutgoingInstallmentTranslated.PARCELADO
       : OutgoingInstallmentTranslated.A_VISTA;
   }
+
+  async delete(idusers: number, idoutgoing: number): Promise<void> {
+    await this.outgoingRepository.delete(idusers, idoutgoing);
+  }
 }

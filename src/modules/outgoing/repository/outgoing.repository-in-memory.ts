@@ -5,6 +5,7 @@ export class OutgoingRepositoryInMemory implements OutgoingRepository {
   outgoings: OutgoingDTO[] = [];
 
   async create(params: OutgoingDTO): Promise<void> {
+    params.idoutgoing = this.outgoings.length + 1;
     this.outgoings.push(params);
   }
 
@@ -28,5 +29,15 @@ export class OutgoingRepositoryInMemory implements OutgoingRepository {
         outgoing.date >= date1 &&
         outgoing.date <= date2,
     );
+  }
+
+  async delete(idusers: number, idoutgoing: number): Promise<void> {
+    const outgoing = this.outgoings.find(
+      (outgoing) =>
+        outgoing.idusers === idusers && outgoing.idoutgoing === idoutgoing,
+    );
+    if (outgoing) {
+      this.outgoings.splice(this.outgoings.indexOf(outgoing), 1);
+    }
   }
 }

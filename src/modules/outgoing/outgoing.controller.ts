@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Request,
@@ -96,6 +97,22 @@ export class OutgoingController {
         throw new InvalidParamsRequestException('Period is invalid');
       }
       return await this.outgoingService.getByPeriod(idusers, date1, date2);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async delete(@Request() req: RequestType): Promise<void> {
+    return handleController(async () => {
+      const idusers = req.user.idusers;
+      if (!idusers) {
+        throw new InvalidParamsRequestException('Idusers is invalid');
+      }
+      const idoutgoing = req.query.idoutgoing;
+      if (!idoutgoing) {
+        throw new InvalidParamsRequestException('Idoutgoing is invalid');
+      }
+      await this.outgoingService.delete(idusers, idoutgoing);
     });
   }
 }

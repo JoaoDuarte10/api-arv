@@ -63,6 +63,14 @@ export class OutgoingRepositoryPostgres implements OutgoingRepository {
     return this.normalizePayload(rows);
   }
 
+  async delete(idusers: number, idoutgoing: number): Promise<void> {
+    const sql = {
+      query: `DELETE FROM api_arv.outgoing WHERE idusers = $1 AND idoutgoing = $2`,
+      values: [idusers, idoutgoing],
+    };
+    await this.database.query(sql.query, sql.values);
+  }
+
   private normalizePayload(outgoings: any[]): OutgoingDTO[] {
     return outgoings.length
       ? outgoings.map((outgoing) => {

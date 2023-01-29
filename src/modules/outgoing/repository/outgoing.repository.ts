@@ -9,4 +9,5 @@ export abstract class OutgoingRepository {
     date1: Date,
     date2: Date,
   ): Promise<OutgoingDTO[]>;
+  abstract delete(idusers: number, idoutgoing: number): Promise<void>;
 }
