@@ -180,7 +180,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
       values: [idusers, idsales],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return this.normalizePayload(rows[0])[0];
+    return this.normalizePayload(rows)[0];
   }
 
   async delete(idusers: number, idsales: number): Promise<void> {
@@ -263,7 +263,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
   }
 
   private normalizePayload(sales: any[]): SalesDTO[] {
-    return sales.length
+    return sales && sales.length
       ? sales.map((sale) => {
           return {
             idsales: sale.idsales,
