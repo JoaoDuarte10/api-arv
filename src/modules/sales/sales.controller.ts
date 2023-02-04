@@ -15,6 +15,7 @@ import { handleController } from '../../infra/http/handle-controller';
 import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
 import { NotFoundReportsException } from './exceptions/not-found-reports';
 import { ApiTags } from '@nestjs/swagger';
+import { NotFoundException } from '../../exceptions/not-found-exception';
 
 @ApiTags('Sales')
 @Controller('sales')
@@ -100,6 +101,30 @@ export class SalesController {
         req.user.idusers,
         idclients,
       );
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('all-filters')
+  async findByAllFilters(@Req() req: RequestType): Promise<SalesDTO[]> {
+    return handleController(async () => {
+      const idclients = req.query.idclients || null;
+      const date = req.query.date;
+      const period = req.query.period;
+      const pending = req.query.pending === 'true' ? true : false;
+
+      const result = await this.salesService.findByAllFilters({
+        idusers: req.user.idusers,
+        idclients,
+        date,
+        period,
+        pending,
+      });
+
+      if (!result.length) {
+        throw new NotFoundException('Nenhuma venda encontrada');
+      }
+      return result;
     });
   }
 

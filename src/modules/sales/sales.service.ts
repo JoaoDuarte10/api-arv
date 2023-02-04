@@ -9,6 +9,8 @@ import {
   PaymentMethodTypeTranslated,
   PaymentMethodType,
 } from '../../types/payment';
+import { InvalidParamsEntityException } from 'src/exceptions/invalid-params-entity';
+import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
 
 @Injectable()
 export class SalesService {
@@ -79,6 +81,30 @@ export class SalesService {
       idusers,
       idclients,
     );
+    return this.normalizePayload(sales);
+  }
+
+  async findByAllFilters(params: {
+    idusers: number;
+    idclients: number;
+    date: string;
+    period: {
+      date1: string;
+      date2: string;
+    };
+    pending: boolean;
+  }): Promise<SalesDTO[]> {
+    if (
+      !params.date &&
+      !params.idclients &&
+      !params.pending &&
+      !params.period.date1
+    ) {
+      throw new InvalidParamsRequestException(
+        'Preencha os campos corretamente',
+      );
+    }
+    const sales = await this.salesRepository.findByAllFilters(params);
     return this.normalizePayload(sales);
   }
 

@@ -4,6 +4,14 @@ import { SalesRepository } from './sales-repository';
 
 @Injectable()
 export class SalesRepositoryInMemory implements SalesRepository {
+  findByAllFilters(params: {
+    idusers: number;
+    idclients: number;
+    date: string;
+    period: { date1: string; date2: string };
+  }): Promise<SalesDTO[]> {
+    throw new Error('Method not implemented.');
+  }
   sales: SalesDTO[] = [];
 
   async create(sales: SalesDTO): Promise<void> {

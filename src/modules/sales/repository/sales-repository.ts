@@ -18,6 +18,16 @@ export abstract class SalesRepository {
     idusers: number,
     idclients: number,
   ): Promise<SalesDTO[]>;
+  abstract findByAllFilters(params: {
+    idusers: number;
+    idclients: number;
+    date: string;
+    period: {
+      date1: string;
+      date2: string;
+    };
+    pending: boolean;
+  }): Promise<SalesDTO[]>;
   abstract getBasicInfoReports(
     idusers: number,
     date1: string,

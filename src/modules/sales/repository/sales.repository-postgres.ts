@@ -111,6 +111,53 @@ export class SalesRepositoryPostgres implements SalesRepository {
     return this.normalizePayload(rows);
   }
 
+  async findByAllFilters(params: {
+    idusers: number;
+    idclients: number;
+    date: string;
+    period: {
+      date1: string;
+      date2: string;
+    };
+    pending: boolean;
+  }): Promise<SalesDTO[]> {
+    const sql = {
+      query: `SELECT
+                s.idsales,
+                c.name AS client,
+                s.idclients,
+                s.description,
+                s.date,
+                s.total,
+                s.payment_status,
+                s.payment_date,
+                s.payment_method,
+                s.created_at
+              FROM api_arv.sales s
+              LEFT JOIN api_arv.clients c ON s.idclients = c.idclients
+              WHERE s.idusers = $1`,
+      values: [params.idusers],
+    };
+    if (params.idclients) {
+      sql.query += ` AND s.idclients = '${params.idclients.toString()}'`;
+    }
+    if (params.date) {
+      sql.query += ` AND s.date = '${params.date.toString()}'`;
+    }
+    if (params.period.date1) {
+      sql.query += ` AND s.date BETWEEN ${params.period.date1.toString()} AND ${params.period.date2.toString()}`;
+    }
+    if (params.pending) {
+      sql.query += ` AND s.payment_status = '${
+        params.pending ? SalesStatus.PENDING : SalesStatus.PAID
+      }'`;
+    }
+    sql.query += ' ORDER BY s.date DESC';
+
+    const { rows } = await this.database.query(sql.query, sql.values);
+    return this.normalizePayload(rows);
+  }
+
   async findPending(idusers: number): Promise<SalesDTO[]> {
     const sql = {
       query: `SELECT
