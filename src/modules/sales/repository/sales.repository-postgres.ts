@@ -145,7 +145,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
       sql.query += ` AND s.date = '${params.date.toString()}'`;
     }
     if (params.period.date1) {
-      sql.query += ` AND s.date BETWEEN ${params.period.date1.toString()} AND ${params.period.date2.toString()}`;
+      sql.query += ` AND s.date BETWEEN '${params.period.date1.toString()}' AND '${params.period.date2.toString()}'`;
     }
     if (params.pending) {
       sql.query += ` AND s.payment_status = '${
