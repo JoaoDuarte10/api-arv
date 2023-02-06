@@ -13,12 +13,12 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  const config = new DocumentBuilder()
+  const swaggerConfig = new DocumentBuilder()
     .setTitle('Api Arv')
     .setDescription(description)
     .setVersion(version)
     .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('/api/docs', app, document);
   app.enableCors();
   app.use(
