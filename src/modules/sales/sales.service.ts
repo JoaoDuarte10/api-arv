@@ -98,7 +98,8 @@ export class SalesService {
       !params.date &&
       !params.idclients &&
       !params.pending &&
-      !params.period.date1
+      !params.period.date1 ||
+      (params.period.date1 && !params.period.date2)
     ) {
       throw new InvalidParamsRequestException(
         'Preencha os campos corretamente',
