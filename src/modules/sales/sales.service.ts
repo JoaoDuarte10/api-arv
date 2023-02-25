@@ -95,10 +95,10 @@ export class SalesService {
     pending: boolean;
   }): Promise<SalesDTO[]> {
     if (
-      !params.date &&
-      !params.idclients &&
-      !params.pending &&
-      !params.period.date1 ||
+      (!params.date &&
+        !params.idclients &&
+        !params.pending &&
+        !params.period.date1) ||
       (params.period.date1 && !params.period.date2)
     ) {
       throw new InvalidParamsRequestException(
