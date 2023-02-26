@@ -7,7 +7,8 @@ export class FindClientService {
   constructor(private readonly repository: ClientRepository) {}
 
   async find(iduser: number, idclients: number): Promise<ClientDto> {
-    return await this.repository.findBy(iduser, 'idclients', idclients)[0];
+    const client = await this.repository.findBy(iduser, 'idclients', idclients);
+    return client[0];
   }
 
   async findBySegment(

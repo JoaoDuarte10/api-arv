@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientDto } from '../client-dto';
+import { ClientDto, ListClientDto } from '../client-dto';
 import { Database } from '../../../config/db-conn';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class ClientRepositoryPostgres {
     idusers: number,
     field: string,
     value: string | number,
-  ): Promise<ClientDto[]> {
+  ): Promise<ListClientDto[]> {
     const sql = {
       text: `SELECT
                 c.idclients,
@@ -32,10 +32,10 @@ export class ClientRepositoryPostgres {
       values: [idusers, value],
     };
     const { rows } = await this.database.query(sql.text, sql.values);
-    return rows;
+    return rows.map((client) => this.normalizePayload(client));
   }
 
-  async find(idusers: number): Promise<ClientDto[]> {
+  async find(idusers: number): Promise<ListClientDto[]> {
     const sql = {
       text: `SELECT
                 c.idclients,
@@ -55,7 +55,7 @@ export class ClientRepositoryPostgres {
       values: [idusers],
     };
     const { rows } = await this.database.query(sql.text, sql.values);
-    return rows;
+    return rows.map((client) => this.normalizePayload(client));
   }
 
   async create(params: ClientDto): Promise<void> {
@@ -110,5 +110,20 @@ export class ClientRepositoryPostgres {
       'UPDATE api_arv.clients SET deleted = $1, updated_at = $2 WHERE idusers = $3 AND idclients = $4;',
       [true, new Date(), idusers, idclients],
     );
+  }
+
+  private normalizePayload(payload: any): ListClientDto {
+    return {
+      idclients: payload.idclients,
+      segment: payload.segment,
+      name: payload.name,
+      email: payload.email,
+      phone: payload.phone,
+      address: payload.address,
+      addressNumber: payload.addressnumber,
+      note: payload.note,
+      created_at: payload.created_at,
+      updated_at: payload.updated_at,
+    };
   }
 }
