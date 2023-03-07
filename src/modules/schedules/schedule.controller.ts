@@ -120,6 +120,16 @@ export class ScheduleController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get(':id')
+  async findById(@Req() req: RequestType): Promise<ScheduleDTO[]> {
+    return handleController(async () => {
+      const idusers = req.user.idusers;
+      const id = req.params.id;
+      return await this.service.findById(idusers, id);
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete()
   async delete(@Req() req: RequestType): Promise<void> {
     return handleController(async () => {

@@ -244,6 +244,19 @@ describe('ScheduleIntegration', () => {
       expect(repository.schedules[0].status).toBe(ScheduleStatus.FINISHED);
     });
 
+    it('Should throws when schedule already finished', async () => {
+      request.body['idschedules'] = payload.idschedules;
+      const repositorySyp = jest.spyOn(repository, 'update');
+
+      try {
+        await sut.finish(request);
+        await sut.finish(request);
+      } catch (error) {
+        expect(error.status).toBe(409);
+        expect(repositorySyp).toHaveBeenCalledTimes(1);
+      }
+    });
+
     it('Should return status code 404 when schedule not exists', async () => {
       try {
         request.body = { idschedules: Math.random() };

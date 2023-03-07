@@ -6,6 +6,7 @@ import { InvalidParamsRequestException } from '../../exceptions/invalid-params-r
 import { InvalidScheduleException } from './domain/exceptions/invalid-schedule';
 import { ScheduleAlreadyExistsException } from './exceptions/schedule-already-exists';
 import { ScheduleNotExistsException } from './exceptions/schedule-not-exists';
+import { ScheduleAlreadyFinishedException } from './exceptions/schedule-already-finished';
 
 @Injectable()
 export class ScheduleService {
@@ -75,6 +76,10 @@ export class ScheduleService {
     return await this.repository.findAllExpireds(idusers);
   }
 
+  async findById(idusers: number, idschedules: number): Promise<ScheduleDTO> {
+    return await this.repository.findOne(idusers, idschedules);
+  }
+
   async delete(idusers: number, idschedules: number): Promise<void> {
     const scheduleExists = await this.repository.findOne(idusers, idschedules);
     if (!scheduleExists) {
@@ -100,6 +105,10 @@ export class ScheduleService {
     if (schedule instanceof ScheduleEntity) {
       schedule.finish();
       await this.repository.update(schedule.getProps());
+    } else {
+      throw new ScheduleAlreadyFinishedException(
+        'Essa agenda já foi finalizada!',
+      );
     }
   }
 
