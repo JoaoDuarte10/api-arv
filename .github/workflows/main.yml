@@ -38,4 +38,4 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'library'
-          severity: 'CRITICAL'
+          severity: 'CRITICAL,HIGH'
