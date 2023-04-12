@@ -13,7 +13,7 @@ import { AuthService } from '../../auth/services/auth.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Request } from 'express';
 import { LocalAuthGuard } from '../../auth/guards/local-auth.guard';
-import { handleController } from 'src/infra/http/handle-controller';
+import { handleController } from '../../../infra/http/handle-controller';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')

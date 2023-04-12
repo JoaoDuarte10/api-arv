@@ -9,7 +9,6 @@ import {
   PaymentMethodTypeTranslated,
   PaymentMethodType,
 } from '../../types/payment';
-import { InvalidParamsEntityException } from 'src/exceptions/invalid-params-entity';
 import { InvalidParamsRequestException } from '../../exceptions/invalid-params-request';
 
 @Injectable()
