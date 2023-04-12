@@ -99,7 +99,7 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
 
   async getMostRecentFrom(
     idusers: number,
-    fromDate: string,
+    _fromDate: string,
   ): Promise<ScheduleDTO[]> {
     return this.schedules.filter(
       (schedule) =>

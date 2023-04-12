@@ -29,23 +29,23 @@ export class RulesRepositoryInMemory implements RulesRepository {
     this.clientsRules.push({ idrules, idusers });
   }
 
-  async findRuleByUser(idusers: number, idrules: number): Promise<boolean> {
+  async findRuleByUser(_idusers: number, _idrules: number): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 
-  async findRuleById(idrules: number): Promise<any> {
+  async findRuleById(_idrules: number): Promise<any> {
     throw new Error('Method not implemented.');
   }
 
-  async findRuleByName(name: string): Promise<any> {
+  async findRuleByName(_name: string): Promise<any> {
     throw new Error('Method not implemented.');
   }
 
-  async removeRuleWithUser(idusers: number, idrules: number): Promise<void> {
+  async removeRuleWithUser(_idusers: number, _idrules: number): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  async enable(idrules: number): Promise<void> {
+  async enable(_idrules: number): Promise<void> {
     throw new Error('Method not implemented.');
   }
 }

@@ -4,7 +4,7 @@ import { SalesRepository } from './sales-repository';
 
 @Injectable()
 export class SalesRepositoryInMemory implements SalesRepository {
-  findByAllFilters(params: {
+  findByAllFilters(_params: {
     idusers: number;
     idclients: number;
     date: string;
@@ -75,23 +75,23 @@ export class SalesRepositoryInMemory implements SalesRepository {
   }
 
   getBasicInfoReports(
-    idusers: number,
-    date1: string,
-    date2: string,
+    _idusers: number,
+    _date1: string,
+    _date2: string,
   ): Promise<any> {
     throw new Error('Method not implemented.');
   }
   getBiggestTotalWithRangeDate(
-    idusers: number,
-    date1: string,
-    date2: string,
+    _idusers: number,
+    _date1: string,
+    _date2: string,
   ): Promise<any> {
     throw new Error('Method not implemented.');
   }
   getLowestTotalWithRangeDate(
-    idusers: number,
-    date1: string,
-    date2: string,
+    _idusers: number,
+    _date1: string,
+    _date2: string,
   ): Promise<any> {
     throw new Error('Method not implemented.');
   }
