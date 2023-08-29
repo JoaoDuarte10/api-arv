@@ -6,6 +6,7 @@ import { SegmentModule } from './segments/segent.module';
 import { SalesModule } from './sales/sales.module';
 import { ScheduleModule } from './schedules/schedule.module';
 import { OutgoingModule } from './outgoing/outgoing.module';
+import { CatalogModule } from './catalog/catalog.module';
 
 export const Modules = [
   ClientModule,
@@ -16,4 +17,5 @@ export const Modules = [
   SalesModule,
   ScheduleModule,
   OutgoingModule,
+  CatalogModule,
 ];

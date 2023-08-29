@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { RulesDTO } from '../rules.dto';
 import { RulesRepository } from './rules.repository';

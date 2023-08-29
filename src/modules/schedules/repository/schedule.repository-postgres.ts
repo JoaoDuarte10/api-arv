@@ -10,6 +10,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
   ) {}
 
   async create(params: ScheduleDTO): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
       query: `INSERT INTO api_arv.schedules(
                 idusers,
@@ -21,9 +24,10 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
                 pacote,
                 atendence_count,
                 total_atendence_count,
-                status
+                status,
+                created_at
             ) VALUES (
-                $1, $2, $3, $4,$5, $6, $7, $8, $9, $10
+                $1, $2, $3, $4,$5, $6, $7, $8, $9, $10, $11
             );`,
       values: [
         params.idusers,
@@ -36,12 +40,16 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
         params.atendenceCount,
         params.totalAtendenceCount,
         params.status,
+        date,
       ],
     };
     await this.database.query(sql.query, sql.values);
   }
 
   async update(params: ScheduleDTO): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
       query: `UPDATE api_arv.schedules SET
                 idusers = $1,
@@ -67,7 +75,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
         params.atendenceCount,
         params.totalAtendenceCount,
         params.status,
-        new Date(),
+        date,
         params.idusers,
         params.idschedules,
       ],

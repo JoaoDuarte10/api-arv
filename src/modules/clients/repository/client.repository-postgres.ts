@@ -59,6 +59,9 @@ export class ClientRepositoryPostgres {
   }
 
   async create(params: ClientDto): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
       text: `INSERT INTO api_arv.clients(
             idusers,
@@ -68,9 +71,10 @@ export class ClientRepositoryPostgres {
             idsegments,
             address,
             address_number,
-            note
+            note,
+            created_at
           ) VALUES(
-            $1, $2, $3, $4, $5, $6, $7, $8
+            $1, $2, $3, $4, $5, $6, $7, $8, $9
           );`,
       values: [
         params.idusers,
@@ -81,12 +85,16 @@ export class ClientRepositoryPostgres {
         params.address,
         params.addressNumber,
         params.note,
+        date,
       ],
     };
     await this.database.query(sql.text, sql.values);
   }
 
   async update(params: ClientDto): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
       text: 'UPDATE api_arv.clients SET name = $1, email = $2, phone = $3, idsegments = $4, address = $5, address_number = $6, note = $7, updated_at = $8 WHERE idclients = $9 AND idusers = $10;',
       values: [
@@ -97,7 +105,7 @@ export class ClientRepositoryPostgres {
         params.address,
         params.addressNumber,
         params.note,
-        new Date(),
+        date,
         params.idclients,
         params.idusers,
       ],
@@ -106,9 +114,12 @@ export class ClientRepositoryPostgres {
   }
 
   async delete(idusers: number, idclients: number): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     await this.database.query(
       'UPDATE api_arv.clients SET deleted = $1, updated_at = $2 WHERE idusers = $3 AND idclients = $4;',
-      [true, new Date(), idusers, idclients],
+      [true, date, idusers, idclients],
     );
   }
 

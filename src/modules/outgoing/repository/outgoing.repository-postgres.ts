@@ -9,6 +9,9 @@ export class OutgoingRepositoryPostgres implements OutgoingRepository {
   ) {}
 
   async create(params: OutgoingDTO): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
       query: `INSERT INTO api_arv.outgoing (
                       idusers,
@@ -16,9 +19,10 @@ export class OutgoingRepositoryPostgres implements OutgoingRepository {
                       date,
                       total,
                       payment_method,
-                      installment
+                      installment,
+                      created_at
                   ) VALUES (
-                      $1, $2, $3, $4, $5, $6
+                      $1, $2, $3, $4, $5, $6, $7
                   )`,
       values: [
         params.idusers,
@@ -27,6 +31,7 @@ export class OutgoingRepositoryPostgres implements OutgoingRepository {
         params.total,
         params.paymentMethod,
         params.installment,
+        date,
       ],
     };
     await this.database.query(sql.query, sql.values);

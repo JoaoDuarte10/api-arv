@@ -9,6 +9,8 @@ import { SalesRepository } from '../modules/sales/repository/sales-repository';
 import { SalesRepositoryPostgres } from '../modules/sales/repository/sales.repository-postgres';
 import { OutgoingRepository } from '../modules/outgoing/repository/outgoing.repository';
 import { OutgoingRepositoryPostgres } from '../modules/outgoing/repository/outgoing.repository-postgres';
+import { CatalogRepository } from 'src/modules/catalog/repository/catalog.repository';
+import { CatalogRepositoryPostgres } from 'src/modules/catalog/repository/catalog.repository-postgres';
 
 export const dependenciesProviders: Provider[] = [
   {
@@ -30,5 +32,9 @@ export const dependenciesProviders: Provider[] = [
   {
     provide: OutgoingRepository,
     useClass: OutgoingRepositoryPostgres,
+  },
+  {
+    provide: CatalogRepository,
+    useClass: CatalogRepositoryPostgres,
   },
 ];

@@ -25,9 +25,12 @@ export class SegmentRepository {
   }
 
   async create(input: { idusers: number; name: string }) {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
-      text: 'INSERT INTO api_arv.segments(idusers, name) VALUES($1, $2)',
-      values: [input.idusers, input.name],
+      text: 'INSERT INTO api_arv.segments(idusers, name, created_at) VALUES($1, $2, $3)',
+      values: [input.idusers, input.name, date],
     };
     await this.database.query(sql.text, sql.values);
   }
@@ -37,9 +40,12 @@ export class SegmentRepository {
     idusers: number;
     segment: string;
   }) {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
-      text: 'UPDATE api_arv.segments SET name = $1 WHERE idusers = $2 AND idsegments = $3',
-      values: [input.segment, input.idusers, input.idsegments],
+      text: 'UPDATE api_arv.segments SET name = $1 WHERE idusers = $2 AND idsegments = $3 AND updated_at = $4',
+      values: [input.segment, input.idusers, input.idsegments, date],
     };
     await this.database.query(sql.text, sql.values);
   }

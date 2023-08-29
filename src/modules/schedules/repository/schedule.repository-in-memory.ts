@@ -99,6 +99,7 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
 
   async getMostRecentFrom(
     idusers: number,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _fromDate: string,
   ): Promise<ScheduleDTO[]> {
     return this.schedules.filter(

@@ -10,14 +10,18 @@ export class RulesRepositoryPostgres implements RulesRepository {
   ) {}
 
   async create(rule: RulesDTO): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
       query: `INSERT INTO api_arv.rules (
                 name,
-                description
+                description,
+                created_at
               ) VALUES (
-                  $1, $2
+                  $1, $2, $3
               );`,
-      values: [rule.name, rule.description],
+      values: [rule.name, rule.description, date],
     };
     await this.database.query(sql.query, sql.values);
   }
@@ -95,14 +99,18 @@ export class RulesRepositoryPostgres implements RulesRepository {
   }
 
   async createWithUser(idusers: number, idrules: number): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
       query: `INSERT INTO api_arv.user_rules (
                 idrules,
-                idusers
+                idusers,
+                created_at
               ) VALUES (
-                  $1, $2
+                  $1, $2, $3
               );`,
-      values: [idrules, idusers],
+      values: [idrules, idusers, date],
     };
     await this.database.query(sql.query, sql.values);
   }

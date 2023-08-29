@@ -10,6 +10,9 @@ export class SalesRepositoryPostgres implements SalesRepository {
   ) {}
 
   async create(sales: SalesDTO): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
       query: `INSERT INTO api_arv.sales (
                 idusers,
@@ -19,9 +22,10 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 total,
                 payment_status,
                 payment_date,
-                payment_method
+                payment_method,
+                created_at
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8
+                $1, $2, $3, $4, $5, $6, $7, $8, $9
             )`,
       values: [
         sales.idusers,
@@ -32,6 +36,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
         sales.paymentStatus,
         sales.paymentDate,
         sales.paymentMethod,
+        date,
       ],
     };
     await this.database.query(sql.query, sql.values);
@@ -239,9 +244,12 @@ export class SalesRepositoryPostgres implements SalesRepository {
   }
 
   async registerPayment(idusers: number, idsales: number): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
       query: `UPDATE api_arv.sales SET payment_status = $1, payment_date = $2, updated_at = $3 WHERE idusers = $4 AND idsales = $5`,
-      values: [SalesStatus.PAID, new Date(), new Date(), idusers, idsales],
+      values: [SalesStatus.PAID, date, date, idusers, idsales],
     };
     await this.database.query(sql.query, sql.values);
   }

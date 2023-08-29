@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { SalesDTO, SalesStatus } from '../sales.dto';
 import { SalesRepository } from './sales-repository';
