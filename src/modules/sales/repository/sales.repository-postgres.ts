@@ -23,9 +23,10 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 payment_status,
                 payment_date,
                 payment_method,
-                created_at
+                created_at,
+                client_name
             ) VALUES (
-                $1, $2, $3, $4, $5, $6, $7, $8, $9
+                $1, $2, $3, $4, $5, $6, $7, $8, $9, $10
             )`,
       values: [
         sales.idusers,
@@ -37,8 +38,10 @@ export class SalesRepositoryPostgres implements SalesRepository {
         sales.paymentDate,
         sales.paymentMethod,
         date,
+        sales.clientName,
       ],
     };
+    console.log(sql);
     await this.database.query(sql.query, sql.values);
   }
 
@@ -48,6 +51,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.idsales,
                 c.name AS client,
                 s.idclients,
+                s.client_name,
                 s.description,
                 s.date,
                 s.total,
@@ -75,6 +79,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
               s.idsales,
               c.name AS client,
               s.idclients,
+              s.client_name,
               s.description,
               s.date,
               s.total,
@@ -99,6 +104,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.idsales,
                 c.name AS client,
                 s.idclients,
+                s.client_name,
                 s.description,
                 s.date,
                 s.total,
@@ -131,6 +137,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.idsales,
                 c.name AS client,
                 s.idclients,
+                s.client_name,
                 s.description,
                 s.date,
                 s.total,
@@ -169,6 +176,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.idsales,
                 c.name AS client,
                 s.idclients,
+                s.client_name,
                 s.description,
                 s.date,
                 s.total,
@@ -195,6 +203,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.idsales,
                 c.name AS client,
                 s.idclients,
+                s.client_name,
                 s.description,
                 s.date,
                 s.total,
@@ -218,6 +227,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
                 s.idsales,
                 c.name AS client,
                 s.idclients,
+                s.client_name,
                 s.description,
                 s.date,
                 s.total,
@@ -323,6 +333,7 @@ export class SalesRepositoryPostgres implements SalesRepository {
           return {
             idsales: sale.idsales,
             idclients: sale.idclients,
+            clientName: sale.client_name,
             client: sale.client,
             description: sale.description,
             date: sale.date,

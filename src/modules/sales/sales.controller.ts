@@ -29,6 +29,7 @@ export class SalesController {
       const payload = {
         idusers: req.user.idusers,
         idclients: sale.idclients,
+        clientName: sale.clientName,
         description: sale.description,
         date: sale.date,
         total: sale.total,

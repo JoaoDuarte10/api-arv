@@ -28,6 +28,11 @@ export class SalesDTO {
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
+  clientName?: number;
+
+  @ApiProperty()
+  @IsString()
   @IsNotEmpty()
   description: string;
 

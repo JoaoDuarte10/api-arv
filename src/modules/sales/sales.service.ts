@@ -33,7 +33,8 @@ export class SalesService {
       (sale.paymentMethod !== PaymentMethodTypeTranslated.BOLETO &&
         sale.paymentMethod !== PaymentMethodTypeTranslated.CARTAO_DE_CREDITO &&
         sale.paymentMethod !== PaymentMethodTypeTranslated.DINHEIRO &&
-        sale.paymentMethod !== PaymentMethodTypeTranslated.PIX)
+        sale.paymentMethod !== PaymentMethodTypeTranslated.PIX &&
+        sale.paymentMethod !== PaymentMethodTypeTranslated.MIX)
     ) {
       throw new InvalidPaymentDateException('Payment method is invalid');
     }
@@ -168,6 +169,8 @@ export class SalesService {
         return PaymentMethodType.CASH;
       case PaymentMethodTypeTranslated.PIX:
         return PaymentMethodType.PIX;
+      case PaymentMethodTypeTranslated.MIX:
+        return PaymentMethodType.MIX;
     }
   }
 
@@ -183,6 +186,8 @@ export class SalesService {
         return PaymentMethodTypeTranslated.CARTAO_DE_CREDITO;
       case PaymentMethodType.PIX:
         return PaymentMethodTypeTranslated.PIX;
+      case PaymentMethodType.MIX:
+        return PaymentMethodTypeTranslated.MIX;
     }
   }
 

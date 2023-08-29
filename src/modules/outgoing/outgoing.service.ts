@@ -34,6 +34,7 @@ export class OutgoingService {
       [PaymentMethodTypeTranslated.DINHEIRO]:
         PaymentMethodTypeTranslated.DINHEIRO,
       [PaymentMethodTypeTranslated.PIX]: PaymentMethodTypeTranslated.PIX,
+      [PaymentMethodTypeTranslated.MIX]: PaymentMethodTypeTranslated.MIX,
     } as any;
   }
 

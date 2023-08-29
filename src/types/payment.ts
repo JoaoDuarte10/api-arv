@@ -3,6 +3,7 @@ export enum PaymentMethodType {
   CASH = 'CASH',
   PIX = 'PIX',
   BILLET = 'BILLET',
+  MIX = 'MIX',
 }
 
 export enum PaymentMethodTypeTranslated {
@@ -10,4 +11,5 @@ export enum PaymentMethodTypeTranslated {
   DINHEIRO = 'Dinheiro',
   PIX = 'PIX',
   BOLETO = 'Boleto',
+  MIX = 'MIX',
 }
