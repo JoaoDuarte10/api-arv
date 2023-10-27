@@ -148,18 +148,20 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     const { rows } = await this.database.query(sql.query, sql.values);
 
     if (!rows.length) {
-      return this.normalizePayload(rows)[0];
+      return;
     }
 
     const sqlScheduleService = {
       query: `
             SELECT
               c.name,
-              ss.idschedule_services
+              ss.idcatalog,
+              ss.idschedule_services,
+              ss.idschedules
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
-            WHERE ss.idschedules IN ($1)`,
-      values: [...rows.map((row) => row.idschedules)],
+            WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
+      values: [],
     };
 
     const { rows: scheduleServices } = await this.database.query(
@@ -195,18 +197,20 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     const { rows } = await this.database.query(sql.query, sql.values);
 
     if (!rows.length) {
-      return this.normalizePayload(rows);
+      return;
     }
 
     const sqlScheduleService = {
       query: `
             SELECT
               c.name,
-              ss.idschedule_services
+              ss.idcatalog,
+              ss.idschedule_services,
+              ss.idschedules
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
-            WHERE ss.idschedules IN ($1)`,
-      values: [...rows.map((row) => row.idschedules)],
+            WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
+      values: [],
     };
 
     const { rows: scheduleServices } = await this.database.query(
@@ -245,18 +249,20 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     const { rows } = await this.database.query(sql.query, sql.values);
 
     if (!rows.length) {
-      return this.normalizePayload(rows);
+      return;
     }
 
     const sqlScheduleService = {
       query: `
             SELECT
               c.name,
-              ss.idschedule_services
+              ss.idcatalog,
+              ss.idschedule_services,
+              ss.idschedules
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
-            WHERE ss.idschedules IN ($1)`,
-      values: [...rows.map((row) => row.idschedules)],
+            WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
+      values: [],
     };
 
     const { rows: scheduleServices } = await this.database.query(
@@ -292,7 +298,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     const { rows } = await this.database.query(sql.query, sql.values);
 
     if (!rows.length) {
-      return this.normalizePayload(rows);
+      return;
     }
 
     const sqlScheduleService = {
@@ -339,7 +345,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     const { rows } = await this.database.query(sql.query, sql.values);
 
     if (!rows.length) {
-      return this.normalizePayload(rows);
+      return;
     }
 
     const sqlScheduleService = {
