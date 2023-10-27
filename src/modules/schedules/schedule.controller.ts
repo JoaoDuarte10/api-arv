@@ -39,6 +39,7 @@ export class ScheduleController {
         atendenceCount: body.atendenceCount,
         totalAtendenceCount: body.totalAtendenceCount,
         status: body.status,
+        idCatalogs: body.idCatalogs,
       };
       await this.service.create(payload);
     });
@@ -63,6 +64,7 @@ export class ScheduleController {
         atendenceCount: body.atendenceCount,
         totalAtendenceCount: body.totalAtendenceCount,
         status: body.status,
+        idCatalogs: body.idCatalogs,
       };
       if (!payload.idschedules) {
         throw new InvalidParamsRequestException('Idschedules is invalid');

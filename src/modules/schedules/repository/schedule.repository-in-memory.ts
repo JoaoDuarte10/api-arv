@@ -108,4 +108,22 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
         schedule.status === ScheduleStatus.FINISHED,
     );
   }
+
+  async createScheduleServices(
+    idschedule: number,
+    idcatalogs: number,
+  ): Promise<void> {
+    console.log(idschedule, idcatalogs);
+  }
+
+  async updateScheduleServices(
+    idschedule: number,
+    idcatalogs: number[],
+  ): Promise<void> {
+    console.log(idschedule, idcatalogs);
+  }
+
+  async deleteScheduleServices(idschedules: number): Promise<void> {
+    console.log(idschedules);
+  }
 }

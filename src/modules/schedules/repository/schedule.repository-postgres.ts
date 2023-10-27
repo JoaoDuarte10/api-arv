@@ -2,47 +2,83 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ScheduleRepository } from './schedule.repository';
 import { Database } from '../../../config/db-conn';
 import { ScheduleDTO, ScheduleStatus } from '../schedule-dto';
+import { ScheduleEntityDB } from './schedule.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ScheduleServicesEntityDB } from './schedule-services.entity';
 
 @Injectable()
 export class ScheduleRepositoryPostgres implements ScheduleRepository {
   constructor(
     @Inject('DATABASE_CONNECTION') private readonly database: Database,
+    @InjectRepository(ScheduleEntityDB)
+    private scheduleRepository: Repository<ScheduleEntityDB>,
+    @InjectRepository(ScheduleServicesEntityDB)
+    private scheduleServicesRepository: Repository<ScheduleServicesEntityDB>,
   ) {}
 
   async create(params: ScheduleDTO): Promise<void> {
     const date = new Date();
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
+    const scheduleEntity = new ScheduleEntityDB();
+    scheduleEntity.idUsers = params.idusers;
+    scheduleEntity.idClients = params.idclients;
+    scheduleEntity.clientName = params.clientName;
+    scheduleEntity.description = params.description;
+    scheduleEntity.time = params.time;
+    scheduleEntity.date = params.date;
+    scheduleEntity.pacote = params.pacote;
+    scheduleEntity.atendenceCount = params.totalAtendenceCount;
+    scheduleEntity.totalAtendenceCount = params.totalAtendenceCount;
+    scheduleEntity.status = params.status;
+    scheduleEntity.createdAt = date;
+
+    await this.scheduleRepository.save(scheduleEntity);
+  }
+
+  async createScheduleServices(
+    idschedule: number,
+    idcatalogs: number,
+  ): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
+    const scheduleService = new ScheduleServicesEntityDB();
+    scheduleService.idCatalog = idcatalogs;
+    scheduleService.idSchedules = idschedule;
+    scheduleService.createdAt = date;
+
+    await this.scheduleServicesRepository.save(scheduleService);
+  }
+
+  async deleteScheduleServices(idschedules: number): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
     const sql = {
-      query: `INSERT INTO api_arv.schedules(
-                idusers,
-                idclients,
-                client_name,
-                description,
-                time,
-                date,
-                pacote,
-                atendence_count,
-                total_atendence_count,
-                status,
-                created_at
-            ) VALUES (
-                $1, $2, $3, $4,$5, $6, $7, $8, $9, $10, $11
-            );`,
-      values: [
-        params.idusers,
-        params.idclients,
-        params.clientName,
-        params.description,
-        params.time,
-        params.date,
-        params.pacote,
-        params.atendenceCount,
-        params.totalAtendenceCount,
-        params.status,
-        date,
-      ],
+      query: `DELETE FROM api_arv.schedule_services ss WHERE idschedules = $1`,
+      values: [idschedules],
     };
+
+    await this.database.query(sql.query, sql.values);
+  }
+
+  async updateScheduleServices(
+    idScheduleService: number,
+    idcatalogs: number[],
+  ): Promise<void> {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
+    const sql = {
+      query: `UPDATE api_arv.schedules SET
+                idcatalog = $1,
+                updated_at = $2
+              WHERE idschedule_services = $3`,
+      values: [idScheduleService, idcatalogs, date],
+    };
+
     await this.database.query(sql.query, sql.values);
   }
 
@@ -110,7 +146,28 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, time, date, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return this.normalizePayload(rows)[0];
+
+    if (!rows.length) {
+      return this.normalizePayload(rows)[0];
+    }
+
+    const sqlScheduleService = {
+      query: `
+            SELECT
+              c.name,
+              ss.idschedule_services
+            FROM api_arv.schedule_services ss
+            INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
+            WHERE ss.idschedules IN ($1)`,
+      values: [...rows.map((row) => row.idschedules)],
+    };
+
+    const { rows: scheduleServices } = await this.database.query(
+      sqlScheduleService.query,
+      sqlScheduleService.values,
+    );
+
+    return this.normalizePayload(rows, scheduleServices)[0];
   }
 
   async findByDate(idusers: number, date: string): Promise<ScheduleDTO[]> {
@@ -136,7 +193,28 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, date, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return this.normalizePayload(rows);
+
+    if (!rows.length) {
+      return this.normalizePayload(rows);
+    }
+
+    const sqlScheduleService = {
+      query: `
+            SELECT
+              c.name,
+              ss.idschedule_services
+            FROM api_arv.schedule_services ss
+            INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
+            WHERE ss.idschedules IN ($1)`,
+      values: [...rows.map((row) => row.idschedules)],
+    };
+
+    const { rows: scheduleServices } = await this.database.query(
+      sqlScheduleService.query,
+      sqlScheduleService.values,
+    );
+
+    return this.normalizePayload(rows, scheduleServices);
   }
 
   async findByIdClient(
@@ -165,7 +243,28 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, idclients, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return this.normalizePayload(rows);
+
+    if (!rows.length) {
+      return this.normalizePayload(rows);
+    }
+
+    const sqlScheduleService = {
+      query: `
+            SELECT
+              c.name,
+              ss.idschedule_services
+            FROM api_arv.schedule_services ss
+            INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
+            WHERE ss.idschedules IN ($1)`,
+      values: [...rows.map((row) => row.idschedules)],
+    };
+
+    const { rows: scheduleServices } = await this.database.query(
+      sqlScheduleService.query,
+      sqlScheduleService.values,
+    );
+
+    return this.normalizePayload(rows, scheduleServices);
   }
 
   async findByClientName(
@@ -191,7 +290,28 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, clientName, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return this.normalizePayload(rows);
+
+    if (!rows.length) {
+      return this.normalizePayload(rows);
+    }
+
+    const sqlScheduleService = {
+      query: `
+            SELECT
+              c.name,
+              ss.idschedule_services
+            FROM api_arv.schedule_services ss
+            INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
+            WHERE ss.idschedules IN ($1)`,
+      values: [...rows.map((row) => row.idschedules)],
+    };
+
+    const { rows: scheduleServices } = await this.database.query(
+      sqlScheduleService.query,
+      sqlScheduleService.values,
+    );
+
+    return this.normalizePayload(rows, scheduleServices);
   }
 
   async findAllExpireds(idusers: number): Promise<ScheduleDTO[]> {
@@ -217,7 +337,31 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, ScheduleStatus.PENDING],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    const schedules = this.normalizePayload(rows);
+
+    if (!rows.length) {
+      return this.normalizePayload(rows);
+    }
+
+    const sqlScheduleService = {
+      query: `
+            SELECT
+              c.name,
+              ss.idcatalog,
+              ss.idschedule_services,
+              ss.idschedules
+            FROM api_arv.schedule_services ss
+            INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
+            WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
+      values: [],
+    };
+
+    const { rows: scheduleServices } = await this.database.query(
+      sqlScheduleService.query,
+      sqlScheduleService.values,
+    );
+
+    const schedules = this.normalizePayload(rows, scheduleServices);
+
     return schedules.map((schedule) => {
       schedule['expired'] = true;
       return schedule;
@@ -255,7 +399,23 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, idschedules],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return this.normalizePayload(rows)[0];
+    const sqlScheduleService = {
+      query: `
+            SELECT
+              c.name,
+              ss.idschedule_services
+            FROM api_arv.schedule_services ss
+            INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
+            WHERE ss.idschedules IN ($1)`,
+      values: [...rows.map((row) => row.idschedules)],
+    };
+
+    const { rows: scheduleServices } = await this.database.query(
+      sqlScheduleService.query,
+      sqlScheduleService.values,
+    );
+
+    return this.normalizePayload(rows, scheduleServices)[0];
   }
 
   async finish(idusers: number, idschedules: number): Promise<void> {
@@ -290,7 +450,23 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, ScheduleStatus.FINISHED],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return this.normalizePayload(rows);
+    const sqlScheduleService = {
+      query: `
+            SELECT
+              c.name,
+              ss.idschedule_services
+            FROM api_arv.schedule_services ss
+            INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
+            WHERE ss.idschedules IN ($1)`,
+      values: [...rows.map((row) => row.idschedules)],
+    };
+
+    const { rows: scheduleServices } = await this.database.query(
+      sqlScheduleService.query,
+      sqlScheduleService.values,
+    );
+
+    return this.normalizePayload(rows, scheduleServices);
   }
 
   async getMostRecentFrom(
@@ -320,10 +496,29 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       values: [idusers, ScheduleStatus.FINISHED, fromDate],
     };
     const { rows } = await this.database.query(sql.query, sql.values);
-    return this.normalizePayload(rows);
+    const sqlScheduleService = {
+      query: `
+            SELECT
+              c.name,
+              ss.idschedule_services
+            FROM api_arv.schedule_services ss
+            INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
+            WHERE ss.idschedules IN ($1)`,
+      values: [...rows.map((row) => row.idschedules)],
+    };
+
+    const { rows: scheduleServices } = await this.database.query(
+      sqlScheduleService.query,
+      sqlScheduleService.values,
+    );
+
+    return this.normalizePayload(rows, scheduleServices);
   }
 
-  private normalizePayload(params: any[]): ScheduleDTO[] {
+  private normalizePayload(
+    params: any[],
+    scheduleServices?: any[],
+  ): ScheduleDTO[] {
     return params.map((schedule) => {
       return {
         idschedules: schedule.idschedules,
@@ -338,6 +533,19 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
         atendenceCount: schedule.atendence_count,
         totalAtendenceCount: schedule.total_atendence_count,
         status: schedule.status,
+        scheduleServices: scheduleServices
+          ?.map((scheduleService) => {
+            if (scheduleService.idschedules !== schedule.idschedules) {
+              return;
+            }
+
+            return {
+              name: scheduleService.name,
+              idScheduleServices: scheduleService.idschedule_services,
+              idCatalog: scheduleService.idcatalog,
+            };
+          })
+          .filter((item) => !!item),
         createdAt: schedule.created_at,
         updatedAt: schedule.updated_at,
       };

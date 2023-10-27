@@ -3,6 +3,15 @@ import { ScheduleDTO } from '../schedule-dto';
 export abstract class ScheduleRepository {
   abstract create(params: ScheduleDTO): Promise<void>;
   abstract update(params: ScheduleDTO): Promise<void>;
+  abstract createScheduleServices(
+    idschedule: number,
+    idcatalogs: number,
+  ): Promise<void>;
+  abstract updateScheduleServices(
+    idschedule: number,
+    idcatalogs: number[],
+  ): Promise<void>;
+  abstract deleteScheduleServices(idschedules: number): Promise<void>;
   abstract findByTimeAndDate(
     idusers: number,
     time: string,

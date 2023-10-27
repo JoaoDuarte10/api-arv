@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsNumber, IsBoolean } from 'class-validator';
+import {
+  IsString,
+  IsOptional,
+  IsNumber,
+  IsBoolean,
+  IsArray,
+} from 'class-validator';
 
 export enum ScheduleStatus {
   PENDING = 'PENDING',
@@ -58,6 +64,15 @@ export class ScheduleDTO {
   @IsString()
   @IsOptional()
   status: ScheduleStatus;
+
+  @ApiProperty()
+  @IsArray()
+  @IsOptional()
+  idCatalogs?: number[];
+
+  @ApiProperty()
+  @IsOptional()
+  scheduleServices?: any[];
 
   @ApiProperty()
   @IsString()

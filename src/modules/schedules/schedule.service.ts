@@ -33,6 +33,28 @@ export class ScheduleService {
     }
 
     await this.repository.create(schedule.getProps());
+
+    const newSchedule = await this.repository.findByTimeAndDate(
+      schedule.getProps().idusers,
+      schedule.getProps().time,
+      schedule.getProps().date,
+    );
+
+    if (
+      !schedule.getProps().idCatalogs ||
+      !schedule.getProps().idCatalogs.length
+    ) {
+      return;
+    }
+
+    await Promise.all(
+      schedule.getProps().idCatalogs.map(async (idcatalog) => {
+        await this.repository.createScheduleServices(
+          newSchedule.idschedules,
+          idcatalog,
+        );
+      }),
+    );
   }
 
   async update(params: ScheduleDTO): Promise<void> {
@@ -51,7 +73,31 @@ export class ScheduleService {
     if (!scheduleExists) {
       throw new ScheduleNotExistsException('Schedule not exists');
     }
+
     await this.repository.update(params);
+
+    if (
+      !schedule.getProps().idCatalogs ||
+      !schedule.getProps().idCatalogs.length
+    ) {
+      await this.repository.deleteScheduleServices(
+        schedule.getProps().idschedules,
+      );
+      return;
+    }
+
+    await this.repository.deleteScheduleServices(
+      schedule.getProps().idschedules,
+    );
+
+    await Promise.all(
+      schedule.getProps().idCatalogs.map(async (idcatalog) => {
+        await this.repository.createScheduleServices(
+          schedule.getProps().idschedules,
+          idcatalog,
+        );
+      }),
+    );
   }
 
   async findByDate(idusers: number, date: string): Promise<ScheduleDTO[]> {

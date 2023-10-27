@@ -8,12 +8,15 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthConfig } from './config';
 import { configProviders } from '../../providers/config-provider';
 import { dependenciesProviders } from '../../providers/dependencies-provider';
+import { entities } from 'src/config/database-entities';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
     forwardRef(() => UserModule),
     PassportModule,
     JwtModule.registerAsync(AuthConfig),
+    TypeOrmModule.forFeature([...entities]),
   ],
   providers: [
     AuthService,

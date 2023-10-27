@@ -41,7 +41,6 @@ export class SalesRepositoryPostgres implements SalesRepository {
         sales.clientName,
       ],
     };
-    console.log(sql);
     await this.database.query(sql.query, sql.values);
   }
 

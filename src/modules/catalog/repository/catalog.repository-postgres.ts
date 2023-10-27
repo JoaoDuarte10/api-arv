@@ -74,7 +74,8 @@ export class CatalogRepositoryPostgres implements CatalogRepository {
           c.created_at,
           c.updated_at
         FROM api_arv.catalogs c
-        WHERE c.idusers = $1 AND c.idcatalog =  $2;
+        WHERE c.idusers = $1 AND c.idcatalog =  $2
+        ORDER BY c.name ASC;
       `,
       values: [idusers, idcatalog],
     };
@@ -96,7 +97,8 @@ export class CatalogRepositoryPostgres implements CatalogRepository {
           c.created_at,
           c.updated_at
         FROM api_arv.catalogs c
-        WHERE c.idusers = $1;
+        WHERE c.idusers = $1
+        ORDER BY c.name ASC;
       `,
       values: [idusers],
     };
