@@ -44,8 +44,8 @@ export class SegmentRepository {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
     const sql = {
-      text: 'UPDATE api_arv.segments SET name = $1 WHERE idusers = $2 AND idsegments = $3 AND updated_at = $4',
-      values: [input.segment, input.idusers, input.idsegments, date],
+      text: 'UPDATE api_arv.segments SET name = $1, updated_at = $2 WHERE idusers = $3 AND idsegments = $4',
+      values: [input.segment, date, input.idusers, input.idsegments],
     };
     await this.database.query(sql.text, sql.values);
   }
