@@ -1,4 +1,5 @@
 import { ScheduleDTO } from '../schedule-dto';
+import { ScheduleServicesEntityDB } from './schedule-services.entity';
 
 export abstract class ScheduleRepository {
   abstract create(params: ScheduleDTO): Promise<void>;
@@ -35,4 +36,7 @@ export abstract class ScheduleRepository {
     idusers: number,
     fromDate: string,
   ): Promise<ScheduleDTO[]>;
+  abstract getScheduleServicesByIdSchedule(
+    idSchedule: number,
+  ): Promise<ScheduleServicesEntityDB[]>;
 }

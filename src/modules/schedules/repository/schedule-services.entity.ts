@@ -19,7 +19,7 @@ export class ScheduleServicesEntityDB {
     ...manyToOneOptions,
   })
   @JoinColumn({ name: 'idschedules' })
-  schedule: ScheduleServicesEntityDB | undefined;
+  schedule?: ScheduleServicesEntityDB | undefined;
 
   @Column({ name: 'idcatalog' })
   idCatalog: number;
@@ -27,7 +27,7 @@ export class ScheduleServicesEntityDB {
     ...manyToOneOptions,
   })
   @JoinColumn({ name: 'idcatalog' })
-  catalog: number;
+  catalog?: number;
 
   @Column({ name: 'created_at' })
   createdAt: Date;

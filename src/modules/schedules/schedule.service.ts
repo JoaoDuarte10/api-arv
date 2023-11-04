@@ -133,6 +133,16 @@ export class ScheduleService {
         `Schedule with id ${idschedules} not exists`,
       );
     }
+
+    const scheduleServices =
+      await this.repository.getScheduleServicesByIdSchedule(
+        scheduleExists.idschedules,
+      );
+
+    if (scheduleServices.length) {
+      await this.repository.deleteScheduleServices(scheduleExists.idschedules);
+    }
+
     await this.repository.delete(idusers, idschedules);
   }
 

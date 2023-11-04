@@ -521,6 +521,25 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     return this.normalizePayload(rows, scheduleServices);
   }
 
+  async getScheduleServicesByIdSchedule(
+    idSchedule: number,
+  ): Promise<ScheduleServicesEntityDB[]> {
+    const sql = {
+      query: `SELECT * FROM api_arv.schedule_services ss WHERE idschedules = $1`,
+      values: [idSchedule],
+    };
+
+    const { rows } = await this.database.query(sql.query, sql.values);
+
+    return rows?.map((row) => ({
+      idScheduleServices: row.idschedule_services,
+      idSchedules: row.idschedules,
+      idCatalog: row.idcatalog,
+      createdAt: row.created_at,
+      updatedAt: row.updatet_at,
+    }));
+  }
+
   private normalizePayload(
     params: any[],
     scheduleServices?: any[],

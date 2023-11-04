@@ -1,4 +1,5 @@
 import { ScheduleDTO, ScheduleStatus } from '../schedule-dto';
+import { ScheduleServicesEntityDB } from './schedule-services.entity';
 import { ScheduleRepository } from './schedule.repository';
 
 export class ScheduleRepositoryInMemory implements ScheduleRepository {
@@ -125,5 +126,12 @@ export class ScheduleRepositoryInMemory implements ScheduleRepository {
 
   async deleteScheduleServices(idschedules: number): Promise<void> {
     console.log(idschedules);
+  }
+
+  async getScheduleServicesByIdSchedule(
+    idSchedule: number,
+  ): Promise<ScheduleServicesEntityDB[]> {
+    console.log(idSchedule);
+    return [];
   }
 }
