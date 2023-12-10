@@ -34,10 +34,10 @@ describe('ScheduleEntity', () => {
     expect(entity).toBeInstanceOf(InvalidScheduleException);
   });
 
-  it('Should return error when description is not provided', () => {
+  it('Should not return error when description is not provided', () => {
     delete payload.description;
     const entity = ScheduleEntity.create(payload);
-    expect(entity).toBeInstanceOf(InvalidScheduleException);
+    expect(entity).toBeInstanceOf(ScheduleEntity);
   });
 
   it('Should return error when time is not provided', () => {

@@ -308,8 +308,8 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               ss.idschedule_services
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
-            WHERE ss.idschedules IN ($1)`,
-      values: [...rows.map((row) => row.idschedules)],
+            WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
+      values: [],
     };
 
     const { rows: scheduleServices } = await this.database.query(
@@ -412,8 +412,8 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               ss.idschedule_services
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
-            WHERE ss.idschedules IN ($1)`,
-      values: [...rows.map((row) => row.idschedules)],
+            WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
+      values: [],
     };
 
     const { rows: scheduleServices } = await this.database.query(
@@ -463,8 +463,8 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               ss.idschedule_services
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
-            WHERE ss.idschedules IN ($1)`,
-      values: [...rows.map((row) => row.idschedules)],
+            WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
+      values: [],
     };
 
     const { rows: scheduleServices } = await this.database.query(
@@ -509,8 +509,8 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               ss.idschedule_services
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
-            WHERE ss.idschedules IN ($1)`,
-      values: [...rows.map((row) => row.idschedules)],
+            WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
+      values: [],
     };
 
     const { rows: scheduleServices } = await this.database.query(
