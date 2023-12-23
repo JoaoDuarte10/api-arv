@@ -19,9 +19,10 @@ export class CatalogRepositoryPostgres implements CatalogRepository {
             name,
             description,
             price,
-            created_at
+            created_at,
+            duration
         ) VALUES (
-            $1, $2, $3, $4, $5
+            $1, $2, $3, $4, $5, $6
         );
       `,
       values: [
@@ -30,6 +31,7 @@ export class CatalogRepositoryPostgres implements CatalogRepository {
         params.description,
         params.price,
         date,
+        params.duration,
       ],
     };
 
@@ -46,7 +48,8 @@ export class CatalogRepositoryPostgres implements CatalogRepository {
           name = $1,
           description = $2,
           price = $3,
-          updated_at = $4
+          updated_at = $4,
+          duration = $7
         WHERE idusers = $5 AND idcatalog = $6;
       `,
       values: [
@@ -56,6 +59,7 @@ export class CatalogRepositoryPostgres implements CatalogRepository {
         date,
         params.idUsers,
         params.idCatalog,
+        params.duration,
       ],
     };
 
@@ -72,7 +76,8 @@ export class CatalogRepositoryPostgres implements CatalogRepository {
           c.description,
           c.price,
           c.created_at,
-          c.updated_at
+          c.updated_at,
+          c.duration
         FROM api_arv.catalogs c
         WHERE c.idusers = $1 AND c.idcatalog =  $2
         ORDER BY c.name ASC;
@@ -95,7 +100,8 @@ export class CatalogRepositoryPostgres implements CatalogRepository {
           c.description,
           c.price,
           c.created_at,
-          c.updated_at
+          c.updated_at,
+          c.duration
         FROM api_arv.catalogs c
         WHERE c.idusers = $1
         ORDER BY c.name ASC;
@@ -124,6 +130,7 @@ export class CatalogRepositoryPostgres implements CatalogRepository {
       name: catalog.name,
       description: catalog.description,
       price: Number(catalog.price),
+      duration: catalog.duration?.substring(0, 5),
       createdAt: catalog.created_at,
       updatedAt: catalog.updated_at,
     }));

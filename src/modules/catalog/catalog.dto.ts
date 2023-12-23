@@ -30,6 +30,11 @@ export class CatalogInputDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
+  duration: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
   createdAt?: string;
 
   @ApiProperty()

@@ -116,6 +116,7 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
         params.idschedules,
       ],
     };
+
     await this.database.query(sql.query, sql.values);
   }
 
@@ -157,7 +158,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               c.name,
               ss.idcatalog,
               ss.idschedule_services,
-              ss.idschedules
+              ss.idschedules,
+              c.price,
+              c.duration
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
             WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
@@ -206,7 +209,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               c.name,
               ss.idcatalog,
               ss.idschedule_services,
-              ss.idschedules
+              ss.idschedules,
+              c.price,
+              c.duration
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
             WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
@@ -258,7 +263,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               c.name,
               ss.idcatalog,
               ss.idschedule_services,
-              ss.idschedules
+              ss.idschedules,
+              c.price,
+              c.duration
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
             WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
@@ -305,7 +312,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       query: `
             SELECT
               c.name,
-              ss.idschedule_services
+              ss.idschedule_services,
+              c.price,
+              c.duration
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
             WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
@@ -354,7 +363,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               c.name,
               ss.idcatalog,
               ss.idschedule_services,
-              ss.idschedules
+              ss.idschedules,
+              c.price,
+              c.duration
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
             WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
@@ -409,7 +420,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       query: `
             SELECT
               c.name,
-              ss.idschedule_services
+              ss.idschedule_services,
+              c.price,
+              c.duration
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
             WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
@@ -460,7 +473,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       query: `
             SELECT
               c.name,
-              ss.idschedule_services
+              ss.idschedule_services,
+              c.price,
+              c.duration
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
             WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
@@ -506,7 +521,9 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
       query: `
             SELECT
               c.name,
-              ss.idschedule_services
+              ss.idschedule_services,
+              c.price,
+              c.duration
             FROM api_arv.schedule_services ss
             INNER JOIN api_arv.catalogs c ON ss.idcatalog = c.idcatalog
             WHERE ss.idschedules IN (${rows.map((row) => row.idschedules)})`,
@@ -545,6 +562,31 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
     scheduleServices?: any[],
   ): ScheduleDTO[] {
     return params.map((schedule) => {
+      const scheduleServicesOfTheSchedule = scheduleServices.filter(
+        (scheduleService) =>
+          scheduleService.idschedules === schedule.idschedules,
+      );
+      const totalHoursServices =
+        scheduleServicesOfTheSchedule.reduce((acc, curr) => {
+          if (!curr.duration) {
+            return acc;
+          }
+          return acc + Number(curr.duration.split(':')[0]);
+        }, 0) || 0;
+      const totalMinutesServices =
+        scheduleServicesOfTheSchedule.reduce((acc, curr) => {
+          if (!curr.duration) {
+            return acc;
+          }
+          return acc + Number(curr.duration.split(':')[1]);
+        }, 0) || 0;
+
+      const initialTime = schedule.time.substring(0, 5);
+      const endTime = this.adicionarDuracaoAoHorario(
+        initialTime,
+        `${totalHoursServices}:${totalMinutesServices}`,
+      );
+
       return {
         idschedules: schedule.idschedules,
         idclients: schedule.idclients,
@@ -553,6 +595,8 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
         phone: schedule.phone,
         description: schedule.description,
         time: schedule.time.substring(0, 5),
+        initialTime,
+        endTime,
         date: schedule.date,
         pacote: schedule.pacote,
         atendenceCount: schedule.atendence_count,
@@ -568,6 +612,8 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
               name: scheduleService.name,
               idScheduleServices: scheduleService.idschedule_services,
               idCatalog: scheduleService.idcatalog,
+              price: parseFloat(scheduleService.price),
+              duration: scheduleService.duration?.substring(0, 5),
             };
           })
           .filter((item) => !!item),
@@ -575,5 +621,35 @@ export class ScheduleRepositoryPostgres implements ScheduleRepository {
         updatedAt: schedule.updated_at,
       };
     });
+  }
+
+  private adicionarDuracaoAoHorario(
+    horarioString: string,
+    duracaoString: string,
+  ) {
+    // Parse das strings para objetos Date
+    const partesDoHorario = horarioString.split(':');
+    const horario = new Date();
+    horario.setHours(parseInt(partesDoHorario[0], 10));
+    horario.setMinutes(parseInt(partesDoHorario[1], 10));
+
+    const partesDaDuracao = duracaoString.split(':');
+    const duracao = {
+      horas: parseInt(partesDaDuracao[0], 10),
+      minutos: parseInt(partesDaDuracao[1], 10),
+    };
+
+    // Adicionar a duração
+    horario.setHours(horario.getHours() + duracao.horas);
+    horario.setMinutes(horario.getMinutes() + duracao.minutos);
+
+    // Formatar a data de volta para o formato HH:mm
+    const novaHora = horario.getHours();
+    const novosMinutos = horario.getMinutes();
+    const horarioFormatado = `${novaHora < 10 ? '0' : ''}${novaHora}:${
+      novosMinutos < 10 ? '0' : ''
+    }${novosMinutos}`;
+
+    return horarioFormatado;
   }
 }

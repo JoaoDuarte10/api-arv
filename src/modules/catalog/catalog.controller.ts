@@ -32,11 +32,17 @@ export class CatalogController {
     @Body() params: CatalogInputDto,
   ): Promise<void> {
     return handleController(async () => {
+      const date = new Date(params.duration);
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
       const payload: CatalogInputDto = {
         idUsers: req.user.idusers,
         description: params.description,
         name: params.name,
         price: params.price,
+        duration: params.duration
+          ? `${date.getUTCHours()}:${date.getMinutes()}`
+          : null,
       };
 
       if (!payload.idUsers) {
@@ -54,12 +60,18 @@ export class CatalogController {
     @Body() params: CatalogInputDto,
   ): Promise<void> {
     return handleController(async () => {
+      const date = new Date(params.duration);
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+
       const payload: CatalogInputDto = {
         idUsers: req.user.idusers,
         description: params.description,
         name: params.name,
         price: params.price,
         idCatalog: params.idCatalog,
+        duration: params.duration
+          ? `${date.getUTCHours()}:${date.getMinutes()}`
+          : null,
       };
 
       if (!payload.idUsers) {
