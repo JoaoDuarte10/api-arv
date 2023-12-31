@@ -1,3 +1,4 @@
+import './config/instrumentation';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -21,9 +22,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('/api/docs', app, document);
   app.enableCors();
-  app.use(
-    swStats.getMiddleware({ swaggerSpec: document, uriPath: '/api/metrics' }),
-  );
+  app.use(swStats.getMiddleware({ swaggerSpec: document }));
 
   const { port } = app.get(AppConfig);
   await app.listen(port, '0.0.0.0');

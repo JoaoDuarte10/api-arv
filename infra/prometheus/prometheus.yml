@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'api-arv'
+    static_configs:
+      - targets: ['api-arv:9464'] # Endereço da sua aplicação
+    metrics_path: '/metrics' # Caminho do endpoint das métricas
+  - job_name: 'api-arv-swagger-stats'
+    static_configs:
+      - targets: ['api-arv:3000'] # Endereço da sua aplicação
+    metrics_path: 'swagger-stats/metrics' # Caminho do endpoint das métricas
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['0.0.0.0:9090']
