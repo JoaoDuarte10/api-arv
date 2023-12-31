@@ -1,18 +1,45 @@
 version: '3'
 
 services:
-  api-arvs:
+  api-arv:
     container_name: api-arv
-    image: joaoduarte10/api-arv:latest
+    image: node:16.14.0-alpine
+    working_dir: /usr/app/arv
     restart: always
-    expose:
-      - 3000
-    # volumes:
-    #   - .:usr/app/arv
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/usr/app/arv
     env_file:
       - .env
     environment:
       TZ: America/Sao_Paulo
+    command: yarn start:dev
+    networks:
+      - arv
+  tempo:
+    image: grafana/tempo
+    container_name: tempo
+    volumes:
+      - ./infra/tempo/tempo.yml:/etc/tempo.yml
+      - ./data/tempo:/tmp/tempo
+    command: [ "-config.file=/etc/tempo.yml" ]
+    ports:
+      - 3200:3200
+      - 4318:4318  # otlp http
+    networks:
+      - arv
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - './infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml'
+      - ./data/prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'
     networks:
       - arv
 
