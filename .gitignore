@@ -44,5 +44,6 @@ lerna-debug.log*
 
 # Data
 data/
+data
 
 .scannerwork
