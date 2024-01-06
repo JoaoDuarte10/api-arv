@@ -19,7 +19,7 @@ export abstract class LoggerTransport {
 }
 
 export abstract class DatabaseConfig {
-  user: string;
+  username: string;
   host: string;
   database: string;
   password: string;

@@ -30,6 +30,8 @@ import { entities } from './config/database-entities';
 
         return {
           type: 'postgres',
+          timezone: '+00:00',
+          autoLoadEntities: true,
           entities: [...entities],
           synchronize: false,
           ...databaseConfig,

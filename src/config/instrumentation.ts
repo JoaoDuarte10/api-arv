@@ -51,15 +51,33 @@ const sdk = new NodeSDK({
         ) => {
           // Apenas para chamadas com erro, para otimizar a qtd de dados nos traces
           if (response.statusCode >= 500) {
-            span.setAttribute('http.body', JSON.stringify(request.body));
+            if (Object.keys(request.body).length) {
+              span.setAttribute(
+                'http.request_body',
+                JSON.stringify(request.body),
+              );
+            }
+
+            if (request.query) {
+              span.setAttribute(
+                'http.query_string',
+                JSON.stringify(request.query),
+              );
+            }
           }
+          span.setAttribute(
+            'http.authorization',
+            request.headers['authorization'],
+          );
         },
       },
       '@opentelemetry/instrumentation-redis': { enabled: false },
       '@opentelemetry/instrumentation-nestjs-core': {
         enabled: true,
       },
-      '@opentelemetry/instrumentation-express': { enabled: true },
+      '@opentelemetry/instrumentation-express': {
+        enabled: true,
+      },
     }),
   ],
 });

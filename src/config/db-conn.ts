@@ -3,7 +3,7 @@ import { DatabaseConfig } from './config';
 
 export function database(dbConfig: DatabaseConfig) {
   const pool = new Pool({
-    user: dbConfig.user,
+    user: dbConfig.username,
     host: dbConfig.host,
     database: dbConfig.database,
     password: dbConfig.password,
