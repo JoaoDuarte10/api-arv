@@ -6,6 +6,7 @@ import { AppModule } from './app.module';
 import { AppConfig } from './config/config';
 import { description, version } from '../package.json';
 import * as swStats from 'swagger-stats';
+import { Logger } from './logger/logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,5 +27,8 @@ async function bootstrap() {
 
   const { port } = app.get(AppConfig);
   await app.listen(port, '0.0.0.0');
+
+  const logger = app.get(Logger);
+  logger.info(`Application running on port: ${port}`);
 }
 bootstrap();

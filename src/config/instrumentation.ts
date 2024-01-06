@@ -4,14 +4,15 @@ import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import { Resource } from '@opentelemetry/resources';
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
-import { TypeormInstrumentation } from 'opentelemetry-instrumentation-typeorm';
+import { Span } from '@opentelemetry/api';
+import { Request, Response } from 'express';
 
 import { name, version } from 'package.json';
 
 const sdk = new NodeSDK({
   metricReader: new PrometheusExporter({
     port: 9464, // optional - default is 9464
-    prefix: 'core',
+    prefix: 'api_arv',
   }),
   traceExporter: new OTLPTraceExporter({
     // optional - default url is http://localhost:4318/v1/traces
@@ -27,9 +28,39 @@ const sdk = new NodeSDK({
   instrumentations: [
     getNodeAutoInstrumentations({
       '@opentelemetry/instrumentation-fs': { enabled: false },
-      '@opentelemetry/instrumentation-pg': { enabled: true },
+      '@opentelemetry/instrumentation-pg': {
+        enabled: true,
+        enhancedDatabaseReporting: true,
+      },
+      '@opentelemetry/instrumentation-net': { enabled: false },
+      '@opentelemetry/instrumentation-http': {
+        enabled: true,
+        ignoreIncomingRequestHook(req) {
+          // Remove paths desnecessários para instrumentação
+          return (
+            '/swagger-stats/metrics'.includes(req.url) ||
+            '/metrics'.includes(req.url) ||
+            'health-check'.includes(req.url) ||
+            req.method === 'OPTIONS'
+          );
+        },
+        applyCustomAttributesOnSpan: (
+          span: Span,
+          request: Request,
+          response: Response,
+        ) => {
+          // Apenas para chamadas com erro, para otimizar a qtd de dados nos traces
+          if (response.statusCode >= 500) {
+            span.setAttribute('http.body', JSON.stringify(request.body));
+          }
+        },
+      },
+      '@opentelemetry/instrumentation-redis': { enabled: false },
+      '@opentelemetry/instrumentation-nestjs-core': {
+        enabled: true,
+      },
+      '@opentelemetry/instrumentation-express': { enabled: true },
     }),
-    new TypeormInstrumentation(),
   ],
 });
 sdk.start();
