@@ -9,3 +9,4 @@ test
 .eslintrc
 .prettierrc
 jest.config.ts
+data/

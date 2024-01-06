@@ -50,7 +50,7 @@ const sdk = new NodeSDK({
           response: Response,
         ) => {
           // Apenas para chamadas com erro, para otimizar a qtd de dados nos traces
-          if (response.statusCode >= 500) {
+          if (response.statusCode >= 500 || response.statusCode === 400) {
             if (Object.keys(request.body).length) {
               span.setAttribute(
                 'http.request_body',
